@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">ContractAI</string>
+    <string name="contract_ai_logo">contract ai logo</string>
+    <string name="hello">Hello,</string>
+    <string name="ai_welcome_image">AI welcome image,</string>
+    <string name="how_can_i_assist">How can i assist you today?</string>
+    <string name="file_search_icon">file search icon</string>
+    <string name="arrow_back_icon">arrow back icon</string>
+    <string name="create_a_contract">Create a Contract</string>
+    <string name="coming_soon">Coming soon!</string>
+    <string name="continue_">Continue</string>
+    <string name="type_your_answer_here">Type your answer here</string>
+    <string name="what_type_of_contract_do_you_need">What type of contract do you need?</string>
+    <string name="no_questions">No Questions</string>
+    <string name="what_is_the_nature_of_your_contract">What is the nature of your contract?</string>
+    <string name="generating_contract">Your contract is under construction</string>
+    <string name="your_contract_is_ready">Your contract is ready!</string>
+    <string name="review_contract">Please review and revise where necessary, after you download.</string>
+    <string name="download">Download</string>
+</resources>
