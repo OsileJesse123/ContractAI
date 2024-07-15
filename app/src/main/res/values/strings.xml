@@ -17,4 +17,18 @@
     <string name="your_contract_is_ready">Your contract is ready!</string>
     <string name="review_contract">Please review and revise where necessary, after you download.</string>
     <string name="download">Download</string>
+    <string name="sign_in">Sign In</string>
+    <string name="google_icon">google icon</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="enter_your_email_address">Enter your email address</string>
+    <string name="visibility_on_icon">visibilty on icon</string>
+    <string name="visibility_off_icon">visibilty off icon</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="remember_password">Remember Password</string>
+    <string name="check_mark_icon">check mark icon</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="this_field_cannot_be_blank">This field cannot be blank</string>
+    <string name="invalid_email">Invalid email</string>
 </resources>

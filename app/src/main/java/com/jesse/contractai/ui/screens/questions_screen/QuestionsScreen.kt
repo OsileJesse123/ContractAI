@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jesse.contractai.R
+import com.jesse.contractai.ui.modifiers.dashedBorder
 import com.jesse.contractai.ui.theme.ContractAITheme
-import com.jesse.contractai.util.dashedBorder
 
 @Composable
 fun QuestionsRoute(

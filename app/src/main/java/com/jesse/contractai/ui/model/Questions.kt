@@ -1,4 +1,4 @@
-package com.jesse.contractai.data.model
+package com.jesse.contractai.ui.model
 
 import com.google.gson.Gson
 

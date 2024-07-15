@@ -25,8 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jesse.contractai.R
+import com.jesse.contractai.ui.modifiers.dashedBorder
 import com.jesse.contractai.ui.theme.ContractAITheme
-import com.jesse.contractai.util.dashedBorder
 
 @Composable
 fun GenerateContractRoute() {

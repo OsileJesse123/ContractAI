@@ -4,6 +4,11 @@ interface Destinations{
     val route: String
 }
 
+object SignInDestination: Destinations{
+    override val route: String
+        get() = "/sign_in"
+}
+
 object HomeDestination: Destinations{
     override val route: String
         get() = "/home"

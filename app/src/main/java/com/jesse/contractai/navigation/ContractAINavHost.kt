@@ -13,6 +13,7 @@ import com.jesse.contractai.ui.screens.contract_nature.ContractNatureRoute
 import com.jesse.contractai.ui.screens.create_contract.CreateContractRoute
 import com.jesse.contractai.ui.screens.home.HomeRoute
 import com.jesse.contractai.ui.screens.questions_screen.QuestionsRoute
+import com.jesse.contractai.ui.screens.sign_in.SignInScreenRoute
 import com.jesse.contractai.ui.shared.SharedViewModel
 
 @Composable
@@ -22,7 +23,13 @@ fun ContractAINavHost(
 
     val sharedViewModel: SharedViewModel = hiltViewModel()
 
-    NavHost(navController = navHostController, startDestination = HomeDestination.route){
+    NavHost(navController = navHostController, startDestination = SignInDestination.route){
+        composable(route = SignInDestination.route){
+            SignInScreenRoute(
+                onNavigateToForgotPassword = {},
+                onNavigateToHomeScreen = {}
+            )
+        }
         composable(route = HomeDestination.route){
             HomeRoute(
                 "Jesse",
