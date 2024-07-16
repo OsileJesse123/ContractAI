@@ -3,6 +3,7 @@ package com.jesse.contractai
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -40,12 +41,19 @@ class MainActivity : ComponentActivity() {
 fun MainScreen() {
 
     var showSplashScreen by remember { mutableStateOf(true) }
-
-    if(showSplashScreen){
-        SplashScreen {
-            showSplashScreen = false
+    AnimatedContent(
+        targetState = showSplashScreen,
+        label = "splash screen navigation animation"
+    ) {
+        targetState ->
+        if(targetState){
+            SplashScreen {
+                showSplashScreen = false
+            }
+        } else {
+            ContractAINavHost(navHostController = rememberNavController())
         }
-    } else {
-        ContractAINavHost(navHostController = rememberNavController())
     }
+
+
 }

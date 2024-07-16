@@ -1,6 +1,8 @@
 package com.jesse.contractai.ui.screens.sign_in
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
@@ -30,12 +32,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jesse.contractai.R
+import com.jesse.contractai.ui.animations.SlideDirection
+import com.jesse.contractai.ui.animations.ContractAISlideInAnimation
 import com.jesse.contractai.ui.components.ContractAIButton
 import com.jesse.contractai.ui.components.ContractAICheckBox
 import com.jesse.contractai.ui.components.ContractAIErrorText
@@ -91,7 +96,7 @@ fun SignInScreen(
     onRememberPassword: (Boolean) -> Unit,
     uiState: SignInUiState
 ) {
-
+    
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -123,160 +128,228 @@ fun SignInScreen(
                     signUpContent
                 ) = createRefs()
 
-                val topGuideLine = createGuidelineFromTop(.25f)
+                val topGuideLine = createGuidelineFromTop(.18f)
 
-                Text(
-                    modifier = Modifier.constrainAs(screenTitle) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                    },
-                    text = stringResource(id = R.string.sign_in),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontSize = 32.sp
-                    )
-                )
+                val animationDelayTime = 300L
+                val animationDelayTimeDifference = 100
+                val animationSpec = tween<Dp>(durationMillis = 500, easing = LinearEasing)
 
-                ContractAIGoogleSignInButton(
-                    modifier = Modifier.constrainAs(googleSignInButton) {
-                        top.linkTo(topGuideLine)
-                    },
-                    onClick = onSignInWithGoogle,
-                    title = stringResource(id = R.string.continue_with_google),
-                    isEnabled = !uiState.isLoading
-                )
-
-                Divider(
-                    modifier = Modifier.constrainAs(divider) {
-                        top.linkTo(googleSignInButton.bottom, margin = Dimens.marginMedium)
-                    }
-                )
-
-                // Email TextField
-                ContractAIOutlinedTextField(
-                    modifier = Modifier
-                        .constrainAs(emailTextField) {
-                            top.linkTo(divider.bottom, margin = Dimens.marginMedium)
-                        },
-                    value = uiState.email,
-                    isError = uiState.emailError != null,
-                    supportingText = {
-                        ContractAIErrorText(
-                            text = uiState.emailError?.let { stringResource(id = it) }
-                        )
-                    },
-                    onValueChange = onEmailChanged,
-                    hint = stringResource(id = R.string.enter_your_email_address),
-                    keyboardType = KeyboardType.Email
-                )
-
-                // Password TextField
-                ContractAIOutlinedTextField(
-                    modifier = Modifier
-                        .constrainAs(passwordTextField) {
-                            top.linkTo(emailTextField.bottom, margin = Dimens.marginMedium)
-                        },
-                    value = uiState.password,
-                    isError = uiState.passwordError != null,
-                    hint = stringResource(id = R.string.enter_your_password),
-                    supportingText = if (uiState.passwordError != null){
-                        { ContractAIErrorText(text = stringResource(id = uiState.passwordError)) }
-                    } else{
-                        null
-                    },
-                    trailingIcon = {
-                        ContractAIPasswordTrailingIcon(
-                            isPasswordVisible = uiState.isPasswordVisible,
-                            onIconButtonClicked = {
-                                isPasswordVisible ->
-                                togglePasswordVisibility(isPasswordVisible)
-                            }
-                        )
-                    },
-                    onValueChange = onPasswordChanged,
-                    keyboardType = KeyboardType.Password,
-                    visualTransformation = if(uiState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
-                )
-
-                TextButton(
-                    modifier = Modifier
-                        .constrainAs(forgotPasswordButton) {
-                            top.linkTo(passwordTextField.bottom, margin = 10.dp)
-                        },
-                    onClick = onNavigateToForgotPassword,
+                ContractAISlideInAnimation(
+                    modifier = Modifier,
+                    direction = SlideDirection.TOP,
+                    animationSpec = tween(durationMillis = 500)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.forgot_password),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            color = MaterialTheme.colorScheme.error,
-                            fontSize = 14.sp
+                        modifier = it.constrainAs(screenTitle) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                        },
+                        text = stringResource(id = R.string.sign_in),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontSize = 32.sp
                         )
                     )
                 }
 
-                Row(
-                    modifier = Modifier
-                        .constrainAs(rememberPasswordCheck) {
-                            top.linkTo(forgotPasswordButton.bottom, margin = 10.dp)
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                ContractAISlideInAnimation(
+                    modifier = Modifier,
+                    direction = SlideDirection.END,
+                    animationSpec = animationSpec,
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 1)
                 ) {
-                    ContractAICheckBox(
-                        modifier = Modifier
-                            .size(18.dp),
-                        checked = uiState.rememberPassword,
-                        onCheckedChange = {
-                            rememberPassword ->
-                            onRememberPassword(rememberPassword)
+                    ContractAIGoogleSignInButton(
+                        modifier = it.constrainAs(googleSignInButton) {
+                            top.linkTo(topGuideLine)
+                        },
+                        onClick = onSignInWithGoogle,
+                        title = stringResource(id = R.string.continue_with_google),
+                        isEnabled = !uiState.isLoading
+                    )
+                }
+
+                ContractAISlideInAnimation(
+                    modifier = Modifier,
+                    direction = SlideDirection.END,
+                    animationSpec = animationSpec,
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 2)
+                ) {
+                    Divider(
+                        modifier = it.constrainAs(divider) {
+                            top.linkTo(googleSignInButton.bottom, margin = Dimens.marginMedium)
                         }
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(id = R.string.remember_password),
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            fontSize = 16.sp
-                        ),
-                        textAlign = TextAlign.Justify
+                }
+
+                // Email TextField
+                ContractAISlideInAnimation(
+                    modifier = Modifier,
+                    direction = SlideDirection.END,
+                    animationSpec = animationSpec,
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 3)
+                ) {
+                    ContractAIOutlinedTextField(
+                        modifier = it
+                            .constrainAs(emailTextField) {
+                                top.linkTo(divider.bottom, margin = Dimens.marginMedium)
+                            }
+                        ,
+                        value = uiState.email,
+                        isError = uiState.emailError != null,
+                        supportingText = {
+                            ContractAIErrorText(
+                                text = uiState.emailError?.let { stringResource(id = it) }
+                            )
+                        },
+                        onValueChange = onEmailChanged,
+                        hint = stringResource(id = R.string.enter_your_email_address),
+                        keyboardType = KeyboardType.Email
                     )
                 }
 
-                ContractAIButton(
-                    modifier = Modifier
-                        .constrainAs(signInButton) {
-                            top.linkTo(rememberPasswordCheck.bottom, margin = 30.dp)
-                            bottom.linkTo(parent.bottom)
-                        },
-                    text = stringResource(
-                        id = R.string.sign_in
-                    ),
-                    onClick = onSignIn,
-                    enabled = uiState.isFormValid() && !uiState.isLoading
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .constrainAs(signUpContent) {
-                            top.linkTo(signInButton.bottom, margin = 30.dp)
-                            bottom.linkTo(parent.bottom, margin = 30.dp)
-                        },
-                    horizontalArrangement = Arrangement.Center
+                // Password TextField
+                ContractAISlideInAnimation(
+                    modifier = Modifier,
+                    direction = SlideDirection.END,
+                    animationSpec = animationSpec,
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 4)
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.dont_have_an_account),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Text(
-                        modifier = Modifier.clickable {
-                            /*TODO*/
+                    ContractAIOutlinedTextField(
+                        modifier = it
+                            .constrainAs(passwordTextField) {
+                                top.linkTo(emailTextField.bottom, margin = Dimens.marginMedium)
+                            },
+                        value = uiState.password,
+                        isError = uiState.passwordError != null,
+                        hint = stringResource(id = R.string.enter_your_password),
+                        supportingText = {
+                            ContractAIErrorText(
+                                text = uiState.passwordError?.let { stringResource(id = it) }
+                            )
                         },
-                        text = stringResource(id = R.string.sign_up),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        trailingIcon = {
+                            ContractAIPasswordTrailingIcon(
+                                isPasswordVisible = uiState.isPasswordVisible,
+                                onIconButtonClicked = {
+                                        isPasswordVisible ->
+                                    togglePasswordVisibility(isPasswordVisible)
+                                }
+                            )
+                        },
+                        offsetAnimationDelay = 1000,
+                        onValueChange = onPasswordChanged,
+                        keyboardType = KeyboardType.Password,
+                        visualTransformation = if(uiState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
                     )
+                }
 
+                ContractAISlideInAnimation(
+                    modifier = Modifier,
+                    direction = SlideDirection.END,
+                    animationSpec = animationSpec,
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 5)
+                ) {
+                    TextButton(
+                        modifier = it
+                            .constrainAs(forgotPasswordButton) {
+                                top.linkTo(passwordTextField.bottom, margin = 10.dp)
+                            },
+                        onClick = onNavigateToForgotPassword,
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.forgot_password),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                color = MaterialTheme.colorScheme.error,
+                                fontSize = 14.sp
+                            )
+                        )
+                    }
+                }
+
+                ContractAISlideInAnimation(
+                    modifier = Modifier,
+                    direction = SlideDirection.END,
+                    animationSpec = animationSpec,
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 6)
+                ) {
+                    Row(
+                        modifier = it
+                            .constrainAs(rememberPasswordCheck) {
+                                top.linkTo(forgotPasswordButton.bottom, margin = 10.dp)
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        ContractAICheckBox(
+                            modifier = Modifier
+                                .size(18.dp),
+                            checked = uiState.rememberPassword,
+                            onCheckedChange = {
+                                    rememberPassword ->
+                                onRememberPassword(rememberPassword)
+                            }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(id = R.string.remember_password),
+                            style = MaterialTheme.typography.titleSmall.copy(
+                                fontSize = 16.sp
+                            ),
+                            textAlign = TextAlign.Justify
+                        )
+                    }
+                }
+
+                ContractAISlideInAnimation(
+                    modifier = Modifier,
+                    direction = SlideDirection.END,
+                    animationSpec = animationSpec,
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 7)
+                ) {
+                    ContractAIButton(
+                        modifier = Modifier
+                            .constrainAs(signInButton) {
+                                top.linkTo(rememberPasswordCheck.bottom, margin = 30.dp)
+                                bottom.linkTo(parent.bottom)
+                            },
+                        text = stringResource(
+                            id = R.string.sign_in
+                        ),
+                        onClick = onSignIn,
+                        enabled = uiState.isFormValid() && !uiState.isLoading
+                    )
+                }
+
+                ContractAISlideInAnimation(
+                    modifier = Modifier,
+                    direction = SlideDirection.END,
+                    animationSpec = animationSpec,
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 8)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .constrainAs(signUpContent) {
+                                top.linkTo(signInButton.bottom, margin = 30.dp)
+                                bottom.linkTo(parent.bottom, margin = 30.dp)
+                            },
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.dont_have_an_account),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Text(
+                            modifier = Modifier.clickable {
+                                /*TODO*/
+                            },
+                            text = stringResource(id = R.string.sign_up),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        )
+
+                    }
                 }
             }
         }
