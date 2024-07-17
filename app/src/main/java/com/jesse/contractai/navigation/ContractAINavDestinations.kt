@@ -9,6 +9,11 @@ object SignInDestination: Destinations{
         get() = "/sign_in"
 }
 
+object SignUpDestination: Destinations{
+    override val route: String
+        get() = "/sign_up"
+}
+
 object HomeDestination: Destinations{
     override val route: String
         get() = "/home"

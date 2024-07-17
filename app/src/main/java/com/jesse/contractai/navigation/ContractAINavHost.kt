@@ -14,6 +14,8 @@ import com.jesse.contractai.ui.screens.create_contract.CreateContractRoute
 import com.jesse.contractai.ui.screens.home.HomeRoute
 import com.jesse.contractai.ui.screens.questions_screen.QuestionsRoute
 import com.jesse.contractai.ui.screens.sign_in.SignInScreenRoute
+import com.jesse.contractai.ui.screens.sign_up.SignUpScreen
+import com.jesse.contractai.ui.screens.sign_up.SignUpScreenRoute
 import com.jesse.contractai.ui.shared.SharedViewModel
 
 @Composable
@@ -27,7 +29,21 @@ fun ContractAINavHost(
         composable(route = SignInDestination.route){
             SignInScreenRoute(
                 onNavigateToForgotPassword = {},
-                onNavigateToHomeScreen = {}
+                onNavigateToHome = {},
+                onNavigateToSignUp = {
+                    navHostController.navigate(SignUpDestination.route){
+                        popUpTo(SignInDestination.route){inclusive = true}
+                    }
+                }
+            )
+        }
+        composable(route = SignUpDestination.route){
+            SignUpScreenRoute(
+                onNavigateToSignIn = {
+                    navHostController.navigate(SignInDestination.route){
+                        popUpTo(SignUpDestination.route){inclusive = true}
+                    }
+                }
             )
         }
         composable(route = HomeDestination.route){

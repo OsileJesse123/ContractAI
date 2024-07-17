@@ -44,32 +44,6 @@ fun ContractAIOutlinedTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     supportingText: @Composable (() -> Unit)? = null
 ) {
-    /*var moved by remember { mutableStateOf(false) }
-
-    val configuration = LocalConfiguration.current
-    val screenWidthPx = configuration.screenWidthDp.dp
-    val density = LocalDensity.current
-    val screenWidth: Int
-    with(density){
-        screenWidth = screenWidthPx.toPx().toInt()
-    }
-
-
-    val offset by animateIntOffsetAsState(
-        targetValue = if(moved){
-            IntOffset.Zero
-        }
-        else{
-            IntOffset(screenWidth, 0)
-        },
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessMediumLow),
-        label = "offset"
-    )
-
-    LaunchedEffect(Unit) {
-        delay(offsetAnimationDelay)
-        moved = true
-    }*/
 
     OutlinedTextField(
         modifier = modifier

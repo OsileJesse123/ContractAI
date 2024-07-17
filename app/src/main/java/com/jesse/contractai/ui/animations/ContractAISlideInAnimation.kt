@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
+
 @Composable
 fun ContractAISlideInAnimation(
     modifier: Modifier = Modifier,
@@ -26,7 +27,7 @@ fun ContractAISlideInAnimation(
     content: @Composable (Modifier) -> Unit
 ) {
     var startAnimation by remember{
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
