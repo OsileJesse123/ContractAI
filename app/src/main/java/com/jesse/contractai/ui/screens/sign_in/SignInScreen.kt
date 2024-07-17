@@ -50,13 +50,17 @@ import com.jesse.contractai.ui.components.ContractAIOutlinedTextField
 import com.jesse.contractai.ui.components.ContractAIPasswordTrailingIcon
 import com.jesse.contractai.ui.theme.ContractAITheme
 import com.jesse.contractai.ui.theme.Dimens
+import com.jesse.contractai.util.animationDelayTime
+import com.jesse.contractai.util.animationDelayTimeDifference
+import com.jesse.contractai.util.animationSpec
 
 @Composable
 fun SignInScreenRoute(
     modifier: Modifier = Modifier,
     viewModel: SignInViewModel = hiltViewModel(),
     onNavigateToForgotPassword: () -> Unit,
-    onNavigateToHomeScreen:() -> Unit
+    onNavigateToHome:() -> Unit,
+    onNavigateToSignUp:() -> Unit
 ) {
     val uiState by viewModel.signInUiState.collectAsStateWithLifecycle()
 
@@ -80,20 +84,22 @@ fun SignInScreenRoute(
         onRememberPassword = {
             rememberPassword ->
             viewModel.rememberPassword(rememberPassword)
-        }
+        },
+        onNavigateToSignUp = onNavigateToSignUp
     )
 }
 
 @Composable
 fun SignInScreen(
     modifier: Modifier = Modifier,
-    onSignInWithGoogle: () -> Unit = {},
-    onSignIn: () -> Unit = {},
+    onSignInWithGoogle: () -> Unit,
+    onSignIn: () -> Unit,
     onEmailChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onNavigateToForgotPassword: () -> Unit,
     togglePasswordVisibility:(Boolean) -> Unit,
     onRememberPassword: (Boolean) -> Unit,
+    onNavigateToSignUp:() -> Unit,
     uiState: SignInUiState
 ) {
     
@@ -129,10 +135,6 @@ fun SignInScreen(
                 ) = createRefs()
 
                 val topGuideLine = createGuidelineFromTop(.18f)
-
-                val animationDelayTime = 300L
-                val animationDelayTimeDifference = 100
-                val animationSpec = tween<Dp>(durationMillis = 500, easing = LinearEasing)
 
                 ContractAISlideInAnimation(
                     modifier = Modifier,
@@ -306,7 +308,7 @@ fun SignInScreen(
                     offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 7)
                 ) {
                     ContractAIButton(
-                        modifier = Modifier
+                        modifier = it
                             .constrainAs(signInButton) {
                                 top.linkTo(rememberPasswordCheck.bottom, margin = 30.dp)
                                 bottom.linkTo(parent.bottom)
@@ -326,7 +328,7 @@ fun SignInScreen(
                     offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 8)
                 ) {
                     Row(
-                        modifier = Modifier
+                        modifier = it
                             .fillMaxWidth()
                             .constrainAs(signUpContent) {
                                 top.linkTo(signInButton.bottom, margin = 30.dp)
@@ -341,7 +343,7 @@ fun SignInScreen(
                         Spacer(modifier = Modifier.width(5.dp))
                         Text(
                             modifier = Modifier.clickable {
-                                /*TODO*/
+                                onNavigateToSignUp()
                             },
                             text = stringResource(id = R.string.sign_up),
                             style = MaterialTheme.typography.titleMedium.copy(
@@ -376,7 +378,9 @@ private fun SignInScreenPreview() {
             onEmailChanged = {},
             onPasswordChanged = {},
             togglePasswordVisibility = {},
-            onRememberPassword = {}
+            onRememberPassword = {},
+            onSignInWithGoogle = {},
+            onNavigateToSignUp = {}
         )
     }
 }

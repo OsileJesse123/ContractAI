@@ -2,8 +2,10 @@ package com.jesse.contractai.ui.components
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -14,7 +16,8 @@ import com.jesse.contractai.ui.theme.ContractAITheme
 fun ContractAIPasswordTrailingIcon(
     modifier: Modifier = Modifier,
     isPasswordVisible: Boolean = true,
-    onIconButtonClicked: (Boolean) -> Unit = {}
+    onIconButtonClicked: (Boolean) -> Unit = {},
+    tint: Color = MaterialTheme.colorScheme.tertiary
 ) {
     IconButton(
         modifier = modifier,
@@ -23,6 +26,7 @@ fun ContractAIPasswordTrailingIcon(
         }
     ) {
         Icon(
+            tint = tint,
             painter = painterResource(
                 id = if (isPasswordVisible){
                     R.drawable.ic_outline_visibility_off
