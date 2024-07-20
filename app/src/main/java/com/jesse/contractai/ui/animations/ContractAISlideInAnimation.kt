@@ -27,7 +27,7 @@ fun ContractAISlideInAnimation(
     content: @Composable (Modifier) -> Unit
 ) {
     var startAnimation by remember{
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
