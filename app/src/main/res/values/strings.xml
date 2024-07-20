@@ -41,4 +41,6 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
     <string name="have_an_account">Have an account?</string>
+    <string name="invalid_name_error">Name should be 3 - 20 characters long, no whitespaces, numbers and symbols are allowed</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
 </resources>

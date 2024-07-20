@@ -1,6 +1,8 @@
 package com.jesse.contractai.di
 
 import com.jesse.contractai.domain.use_case.ValidateEmailUseCase
+import com.jesse.contractai.domain.use_case.ValidateNameUseCase
+import com.jesse.contractai.domain.use_case.ValidatePasswordStrengthUseCase
 import com.jesse.contractai.domain.use_case.ValidatePasswordUseCase
 import com.jesse.contractai.util.EmailMatcher
 import com.jesse.contractai.util.EmailMatcherImpl
@@ -23,4 +25,10 @@ object UseCaseModule {
 
     @Provides
     fun provideValidatePasswordUseCase() = ValidatePasswordUseCase()
+
+    @Provides
+    fun provideValidateNameUseCase() = ValidateNameUseCase()
+
+    @Provides
+    fun provideValidatePasswordStrengthUseCase() = ValidatePasswordStrengthUseCase()
 }
