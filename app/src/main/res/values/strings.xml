@@ -50,4 +50,10 @@
         address associated with your account and we\'ll send you an email to
         reset your password.</string>
     <string name="reset">Reset</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="open_email_image">open email image</string>
+    <string name="verify_your_email_address">Verify Your Email Address</string>
+    <string name="verify_email_address_instructions">We have just sent an email verification link to %s. Please check your email and click on the link to verify your email address.</string>
+    <string name="verify_email_address_instructions_2">If not auto redirected after verification, click on the continue button below.</string>
+    <string name="re_send_email_link">Re-send email link</string>
 </resources>
