@@ -17,6 +17,7 @@ import com.jesse.contractai.ui.screens.questions_screen.QuestionsRoute
 import com.jesse.contractai.ui.screens.sign_in.SignInScreenRoute
 import com.jesse.contractai.ui.screens.sign_up.SignUpScreen
 import com.jesse.contractai.ui.screens.sign_up.SignUpScreenRoute
+import com.jesse.contractai.ui.screens.verify_email.VerifyEmailRoute
 import com.jesse.contractai.ui.shared.SharedViewModel
 
 @Composable
@@ -46,11 +47,26 @@ fun ContractAINavHost(
                     navHostController.navigate(SignInDestination.route){
                         popUpTo(SignUpDestination.route){inclusive = true}
                     }
+                },
+                onNavigateToVerifyEmail = {
+                    navHostController.navigate(VerifyEmailDestination.route)
                 }
             )
         }
         composable(route = ForgotPasswordDestination.route){
             ForgotPasswordRoute(
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                }
+            )
+        }
+        composable(route = VerifyEmailDestination.route){
+            VerifyEmailRoute(
+                onNavigateToNextScreen = {
+                       navHostController.navigate(SignInDestination.route) {
+                           popUpTo(VerifyEmailDestination.route){inclusive = true}
+                       }
+                },
                 onNavigateBack = {
                     navHostController.navigateUp()
                 }

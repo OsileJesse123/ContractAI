@@ -32,6 +32,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,9 +69,17 @@ import com.jesse.contractai.util.animationSpec
 fun SignUpScreenRoute(
     modifier: Modifier = Modifier,
     onNavigateToSignIn: () -> Unit,
+    onNavigateToVerifyEmail: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.signUpUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = uiState.navigateToNextScreen) {
+        if(uiState.navigateToNextScreen){
+            onNavigateToVerifyEmail()
+            viewModel.onNavigateToNextScreen()
+        }
+    }
 
     SignUpScreen(
         modifier = modifier,

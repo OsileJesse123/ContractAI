@@ -103,7 +103,7 @@ class SignUpViewModel @Inject constructor(
                 delay(2_000)
                 _signUpUiState.update {
                         signUpUiState ->
-                    signUpUiState.copy(isLoading = false)
+                    signUpUiState.copy(navigateToNextScreen = true)
                 }
             }
         }
@@ -118,7 +118,7 @@ class SignUpViewModel @Inject constructor(
             delay(2_000)
             _signUpUiState.update {
                     signUpUiState ->
-                signUpUiState.copy(isLoading = false)
+                signUpUiState.copy(isLoading = false, navigateToNextScreen = true)
             }
         }
     }
@@ -141,6 +141,13 @@ class SignUpViewModel @Inject constructor(
         _signUpUiState.update {
                 signUpUiState ->
             signUpUiState.copy(isConfirmPasswordVisible = isConfirmPasswordVisible)
+        }
+    }
+
+    fun onNavigateToNextScreen(){
+        _signUpUiState.update {
+            signUpUiState ->
+            signUpUiState.copy(navigateToNextScreen = false, isLoading = false)
         }
     }
 }

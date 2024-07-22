@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jesse.contractai.R
 import com.jesse.contractai.ui.animations.ContractAISlideInAnimation
 import com.jesse.contractai.ui.animations.SlideDirection
+import com.jesse.contractai.ui.components.ContractAIBackButton
 import com.jesse.contractai.ui.components.ContractAIButton
 import com.jesse.contractai.ui.components.ContractAIErrorText
 import com.jesse.contractai.ui.components.ContractAILoadingOverlay
@@ -83,7 +84,7 @@ fun ForgotPasswordScreen(
         contentAlignment = Alignment.Center
     ){
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(
@@ -98,25 +99,10 @@ fun ForgotPasswordScreen(
                 animationSpec = tween(durationMillis = 500),
                 beginAnimation = beginAnimation
             ) {
-                IconButton(
-                    modifier = it
-                        .clip(CircleShape)
-                    ,
-                    onClick = onNavigateBack,
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary.copy(
-                            alpha = .1f
-                        )
-                    )
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = R.drawable.ic_double_back_arrow
-                        ),
-                        tint = MaterialTheme.colorScheme.tertiary,
-                        contentDescription = stringResource(id = R.string.double_back_arrow)
-                    )
-                }
+                ContractAIBackButton(
+                    modifier = it,
+                    onClick = onNavigateBack
+                )
             }
             Spacer(modifier = Modifier.height(height = 20.dp))
             ContractAISlideInAnimation(
