@@ -23,11 +23,12 @@ fun ContractAISlideInAnimation(
     modifier: Modifier = Modifier,
     offsetAnimationDelay: Long = 300,
     direction: SlideDirection,
+    beginAnimation: Boolean = false,
     animationSpec: AnimationSpec<Dp> = tween(easing = LinearEasing),
     content: @Composable (Modifier) -> Unit
 ) {
     var startAnimation by remember{
-        mutableStateOf(false)
+        mutableStateOf(beginAnimation)
     }
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp

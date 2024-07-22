@@ -85,7 +85,8 @@ fun SignInScreenRoute(
             rememberPassword ->
             viewModel.rememberPassword(rememberPassword)
         },
-        onNavigateToSignUp = onNavigateToSignUp
+        onNavigateToSignUp = onNavigateToSignUp,
+        beginAnimation = false
     )
 }
 
@@ -100,6 +101,7 @@ fun SignInScreen(
     togglePasswordVisibility:(Boolean) -> Unit,
     onRememberPassword: (Boolean) -> Unit,
     onNavigateToSignUp:() -> Unit,
+    beginAnimation: Boolean,
     uiState: SignInUiState
 ) {
     
@@ -139,7 +141,8 @@ fun SignInScreen(
                 ContractAISlideInAnimation(
                     modifier = Modifier,
                     direction = SlideDirection.TOP,
-                    animationSpec = tween(durationMillis = 500)
+                    animationSpec = tween(durationMillis = 500),
+                    beginAnimation = beginAnimation
                 ) {
                     Text(
                         modifier = it.constrainAs(screenTitle) {
@@ -157,7 +160,8 @@ fun SignInScreen(
                     modifier = Modifier,
                     direction = SlideDirection.END,
                     animationSpec = animationSpec,
-                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 1)
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 1),
+                    beginAnimation = beginAnimation
                 ) {
                     ContractAIGoogleSignInButton(
                         modifier = it.constrainAs(googleSignInButton) {
@@ -173,7 +177,8 @@ fun SignInScreen(
                     modifier = Modifier,
                     direction = SlideDirection.END,
                     animationSpec = animationSpec,
-                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 2)
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 2),
+                    beginAnimation = beginAnimation
                 ) {
                     Divider(
                         modifier = it.constrainAs(divider) {
@@ -187,7 +192,8 @@ fun SignInScreen(
                     modifier = Modifier,
                     direction = SlideDirection.END,
                     animationSpec = animationSpec,
-                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 3)
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 3),
+                    beginAnimation = beginAnimation
                 ) {
                     ContractAIOutlinedTextField(
                         modifier = it
@@ -213,7 +219,8 @@ fun SignInScreen(
                     modifier = Modifier,
                     direction = SlideDirection.END,
                     animationSpec = animationSpec,
-                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 4)
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 4),
+                    beginAnimation = beginAnimation
                 ) {
                     ContractAIOutlinedTextField(
                         modifier = it
@@ -248,7 +255,8 @@ fun SignInScreen(
                     modifier = Modifier,
                     direction = SlideDirection.END,
                     animationSpec = animationSpec,
-                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 5)
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 5),
+                    beginAnimation = beginAnimation
                 ) {
                     TextButton(
                         modifier = it
@@ -271,7 +279,8 @@ fun SignInScreen(
                     modifier = Modifier,
                     direction = SlideDirection.END,
                     animationSpec = animationSpec,
-                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 6)
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 6),
+                    beginAnimation = beginAnimation
                 ) {
                     Row(
                         modifier = it
@@ -305,7 +314,8 @@ fun SignInScreen(
                     modifier = Modifier,
                     direction = SlideDirection.END,
                     animationSpec = animationSpec,
-                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 7)
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 7),
+                    beginAnimation = beginAnimation
                 ) {
                     ContractAIButton(
                         modifier = it
@@ -325,7 +335,8 @@ fun SignInScreen(
                     modifier = Modifier,
                     direction = SlideDirection.END,
                     animationSpec = animationSpec,
-                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 8)
+                    offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 8),
+                    beginAnimation = beginAnimation
                 ) {
                     Row(
                         modifier = it
@@ -380,7 +391,8 @@ private fun SignInScreenPreview() {
             togglePasswordVisibility = {},
             onRememberPassword = {},
             onSignInWithGoogle = {},
-            onNavigateToSignUp = {}
+            onNavigateToSignUp = {},
+            beginAnimation = true
         )
     }
 }
