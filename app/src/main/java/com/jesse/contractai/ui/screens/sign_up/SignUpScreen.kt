@@ -113,7 +113,8 @@ fun SignUpScreenRoute(
             viewModel.toggleTermsAndConditions(termsAndConditionsChecked)
         },
         onNavigateToSignIn = onNavigateToSignIn,
-        uiState = uiState
+        uiState = uiState,
+        beginAnimation = false
     )
 }
 
@@ -131,6 +132,7 @@ fun SignUpScreen(
     togglePasswordVisibility: (Boolean) -> Unit,
     toggleConfirmPasswordVisibility: (Boolean) -> Unit,
     onTermsAndConditionsChecked: (Boolean) -> Unit,
+    beginAnimation: Boolean,
     uiState: SignUpUiState
 ) {
     Box(
@@ -152,7 +154,8 @@ fun SignUpScreen(
             ContractAISlideInAnimation(
                 modifier = Modifier,
                 direction = SlideDirection.TOP,
-                animationSpec = tween(durationMillis = 500)
+                animationSpec = tween(durationMillis = 500),
+                beginAnimation = beginAnimation
             ) {
                 Text(
                     modifier = it,
@@ -169,7 +172,8 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 1)
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 1),
+                beginAnimation = beginAnimation
             ) {
                 ContractAIGoogleSignInButton(
                     modifier = it,
@@ -183,7 +187,8 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 2)
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 2),
+                beginAnimation = beginAnimation
             ) {
                 Divider(
                     modifier = it.padding(vertical = 20.dp)
@@ -194,7 +199,8 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 3)
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 3),
+                beginAnimation = beginAnimation
             ) {
                 ContractAIOutlinedTextField(
                     modifier = it,
@@ -218,7 +224,8 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 4)
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 4),
+                beginAnimation = beginAnimation
             ) {
                 ContractAIOutlinedTextField(
                     modifier = it,
@@ -242,7 +249,8 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 5)
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 5),
+                beginAnimation = beginAnimation
             ) {
                 ContractAIOutlinedTextField(
                     modifier = it,
@@ -266,7 +274,8 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 6)
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 6),
+                beginAnimation = beginAnimation
             ) {
                 Column(
                     modifier = it
@@ -310,7 +319,8 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 7)
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 7),
+                beginAnimation = beginAnimation
             ) {
                 ContractAIOutlinedTextField(
                     modifier = it,
@@ -345,7 +355,8 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 8)
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 8),
+                beginAnimation = beginAnimation
             ) {
                 Row(
                     modifier = it,
@@ -376,7 +387,8 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 9)
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 9),
+                beginAnimation = beginAnimation
             ) {
                 ContractAIButton(
                     modifier = it.padding(top = Dimens.marginMedium),
@@ -392,7 +404,8 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 10)
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 10),
+                beginAnimation = beginAnimation
             ) {
                 Row(
                     modifier = it
@@ -522,7 +535,8 @@ private fun SignUpScreenPreview() {
             onSignUp = {},
             onConfirmPasswordChanged = {},
             toggleConfirmPasswordVisibility = {},
-            togglePasswordVisibility = {}
+            togglePasswordVisibility = {},
+            beginAnimation = true
         )
     }
 }

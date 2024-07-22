@@ -1,6 +1,5 @@
 package com.jesse.contractai.ui.screens.sign_up
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jesse.contractai.R
@@ -31,7 +30,6 @@ class SignUpViewModel @Inject constructor(
             signUpUiState ->
             signUpUiState.copy(firstName = firstName)
         }
-        Log.e("UiState", "UiState: ${_signUpUiState.value}")
         // Validate
         _signUpUiState.update {
                 signUpUiState ->
