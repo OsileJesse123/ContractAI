@@ -490,7 +490,8 @@ fun ContractAIPasswordStrengthComposable(
                     .togetherWith(
                     fadeOut(animationSpec = tween(300)) + scaleOut()
                 )
-            }
+            },
+            label = "password strength composable text animation"
         ) {
             targetState ->
             Text(
