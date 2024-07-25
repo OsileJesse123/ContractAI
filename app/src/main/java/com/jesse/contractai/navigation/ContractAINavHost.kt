@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -22,6 +23,8 @@ import com.jesse.contractai.ui.shared.SharedViewModel
 
 @Composable
 fun ContractAINavHost(
+    modifier: Modifier = Modifier,
+    updateBottomBarState: (Boolean) -> Unit,
     navHostController: NavHostController
 ) {
 
@@ -33,7 +36,11 @@ fun ContractAINavHost(
                 onNavigateToForgotPassword = {
                     navHostController.navigate(ForgotPasswordDestination.route)
                 },
-                onNavigateToHome = {},
+                onNavigateToHome = {
+                    navHostController.navigate(HomeDestination.route){
+                        popUpTo(SignInDestination.route){inclusive = true}
+                    }
+                },
                 onNavigateToSignUp = {
                     navHostController.navigate(SignUpDestination.route){
                         popUpTo(SignInDestination.route){inclusive = true}
@@ -64,7 +71,7 @@ fun ContractAINavHost(
             VerifyEmailRoute(
                 onNavigateToNextScreen = {
                        navHostController.navigate(SignInDestination.route) {
-                           popUpTo(VerifyEmailDestination.route){inclusive = true}
+                           popUpTo(0){inclusive = true}
                        }
                 },
                 onNavigateBack = {
@@ -74,8 +81,13 @@ fun ContractAINavHost(
         }
         composable(route = HomeDestination.route){
             HomeRoute(
-                "Jesse",
-                onNavigateToCreateContract = {navHostController.navigate(CreateContractDestination.route)}
+                onNavigateToContractHistory = {},
+                onNavigateToLoginScreen = {
+                    navHostController.navigate(SignInDestination.route){
+                        popUpTo(HomeDestination.route){ inclusive = true }
+                    }
+                },
+                updateBottomBarState = updateBottomBarState
             )
         }
         composable(route = CreateContractDestination.route){

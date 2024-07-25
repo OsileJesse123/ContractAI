@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">ContractAI</string>
     <string name="contract_ai_logo">contract ai logo</string>
-    <string name="hello">Hello,</string>
+    <string name="welcome_message">Hello %s,\nHow can i assist you today?</string>
     <string name="ai_welcome_image">AI welcome image,</string>
-    <string name="how_can_i_assist">How can i assist you today?</string>
     <string name="file_search_icon">file search icon</string>
+    <string name="add_file_icon">add file icon</string>
     <string name="arrow_back_icon">arrow back icon</string>
     <string name="create_a_contract">Create a Contract</string>
     <string name="coming_soon">Coming soon!</string>
@@ -15,7 +15,13 @@
     <string name="what_is_the_nature_of_your_contract">What is the nature of your contract?</string>
     <string name="generating_contract">Your contract is under construction</string>
     <string name="your_contract_is_ready">Your contract is ready!</string>
-    <string name="review_contract">Please review and revise where necessary, after you download.</string>
+    <string name="review_contract">Review Contract</string>
+    <string name="review_any_kind_of_contract">Review any kind of contract</string>
+    <string name="review_contract_instruction">Please review and revise where necessary, after you download.</string>
+    <string name="review_contract_hint">Upload the contract you want reviewed and wait for the report</string>
+    <string name="draft_contract">Draft Contract</string>
+    <string name="draft_any_kind_of_contract">Draft any kind of contract</string>
+    <string name="draft_contract_hint">Select a contract type or enter a prompt to draft one</string>
     <string name="download">Download</string>
     <string name="sign_in">Sign In</string>
     <string name="google_icon">google icon</string>
@@ -56,4 +62,15 @@
     <string name="verify_email_address_instructions">We have just sent an email verification link to %s. Please check your email and click on the link to verify your email address.</string>
     <string name="verify_email_address_instructions_2">If not auto redirected after verification, click on the continue button below.</string>
     <string name="re_send_email_link">Re-send email link</string>
+    <string name="home">Home</string>
+    <string name="contract_card_hint_bg_img">contract card hint background image</string>
+    <string name="contract_history">Contract History</string>
+    <string name="see_all">See All</string>
+    <string name="lady_reading_illustration">lady reading illustration</string>
+    <string name="its_quiet_here">It\'s quiet here…</string>
+    <string name="you_will_find_your_recent_contacts_here">You will find your recent contracts here</string>
+    <string name="cancel_icon">cancel icon</string>
+    <string name="edit_icon">edit icon</string>
+    <string name="hi_user">Hi, %s</string>
+    <string name="logout_of_your_account">Logout of your Account</string>
 </resources>
