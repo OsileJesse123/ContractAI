@@ -42,6 +42,11 @@ object HomeDestination: Destinations{
         get() = R.string.home
 }
 
+object ContractHistoryDestination: Destinations {
+    override val route: String
+        get() = "/contract_history"
+}
+
 object CreateContractDestination: Destinations{
     override val route: String
         get() = "/create_contract"
