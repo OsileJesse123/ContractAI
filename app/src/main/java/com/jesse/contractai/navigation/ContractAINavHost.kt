@@ -10,6 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.jesse.contractai.ui.screens.contract_history.ContractHistoryRoute
 import com.jesse.contractai.ui.screens.contract_nature.ContractNatureRoute
 import com.jesse.contractai.ui.screens.create_contract.CreateContractRoute
 import com.jesse.contractai.ui.screens.forgot_password.ForgotPasswordRoute
@@ -81,13 +82,22 @@ fun ContractAINavHost(
         }
         composable(route = HomeDestination.route){
             HomeRoute(
-                onNavigateToContractHistory = {},
+                onNavigateToContractHistory = {
+                    navHostController.navigate(ContractHistoryDestination.route)
+                },
                 onNavigateToLoginScreen = {
                     navHostController.navigate(SignInDestination.route){
                         popUpTo(HomeDestination.route){ inclusive = true }
                     }
                 },
                 updateBottomBarState = updateBottomBarState
+            )
+        }
+        composable(route = ContractHistoryDestination.route){
+            ContractHistoryRoute(
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                }
             )
         }
         composable(route = CreateContractDestination.route){

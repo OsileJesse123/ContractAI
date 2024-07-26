@@ -86,8 +86,16 @@ fun MainScreen() {
                 bottomBar = {
                     AnimatedVisibility(
                         visible = bottomBarState,
-                        enter = slideInHorizontally(animationSpec = tween(300, easing = LinearEasing)),
-                        exit = slideOutHorizontally(animationSpec = tween(300, easing = LinearEasing))
+                        enter = slideInHorizontally(
+                            animationSpec = tween(300, easing = LinearEasing),
+                            initialOffsetX = {
+                                -it
+                            }
+                        ),
+                        exit = slideOutHorizontally(
+                            animationSpec = tween(300, easing = LinearEasing),
+                            targetOffsetX = {-it}
+                        )
                     ) {
                         Column(
                             modifier = Modifier.padding(horizontal = Dimens.screenHorizontalPadding)
