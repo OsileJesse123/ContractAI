@@ -76,7 +76,7 @@ class SignInViewModel @Inject constructor(
             delay(2_000)
             _signInUiState.update {
                     signInUiState ->
-                signInUiState.copy(isLoading = false)
+                signInUiState.copy(isLoading = false, navigateToNextScreen = true)
             }
         }
     }

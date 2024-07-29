@@ -31,14 +31,12 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -51,7 +49,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -76,15 +73,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jesse.contractai.R
 import com.jesse.contractai.ui.components.ContractHistoryItem
-import com.jesse.contractai.ui.theme.Black800
 import com.jesse.contractai.ui.theme.Blue600
 import com.jesse.contractai.ui.theme.ContractAITheme
 import com.jesse.contractai.ui.theme.Dimens
 import com.jesse.contractai.ui.theme.Green100
 import com.jesse.contractai.ui.theme.Green600
+import com.jesse.contractai.ui.theme.HexagonShape
 import com.jesse.contractai.ui.theme.Orange200
-import com.jesse.contractai.util.HexagonShape
-import com.jesse.contractai.util.drawCustomHexagonPath
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -512,7 +507,7 @@ fun ContractHintCard(
                             .drawWithContent {
                                 drawContent()
                                 drawPath(
-                                    path = drawCustomHexagonPath(size),
+                                    path = HexagonShape.drawCustomHexagonPath(size),
                                     color = Color.White,
                                     style = Stroke(
                                         width = 3.5f,

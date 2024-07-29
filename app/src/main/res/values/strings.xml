@@ -73,4 +73,10 @@
     <string name="edit_icon">edit icon</string>
     <string name="hi_user">Hi, %s</string>
     <string name="logout_of_your_account">Logout of your Account</string>
+    <string name="import_file_icon">import file icon</string>
+    <string name="upload_files_here">Upload files here</string>
+    <string name="pdf_files_only">.pdf files only</string>
+    <string name="start_review">Start Review</string>
+    <string name="file_icon">file icon</string>
+    <string name="delete_icon">delete icon</string>
 </resources>

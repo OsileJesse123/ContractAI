@@ -6,28 +6,12 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import com.jesse.contractai.navigation.HomeDestination
 import kotlin.math.min
 import kotlin.math.sqrt
 
-class HexagonShape : Shape {
-
-    override fun createOutline(
-        size: Size,
-        layoutDirection: LayoutDirection,
-        density: Density
-    ): Outline {
-        return Outline.Generic(
-            path = drawCustomHexagonPath(size)
-        )
-    }
-}
-
-fun drawCustomHexagonPath(size: Size): Path {
-    return Path().apply {
-        val radius = min(size.width / 2f, size.height / 2f)
-        customHexagon(radius, size)
-    }
-}
 
 fun Path.customHexagon(radius: Float, size: Size) {
     val triangleHeight = (sqrt(3.0) * radius / 2)
@@ -42,4 +26,10 @@ fun Path.customHexagon(radius: Float, size: Size) {
     lineTo((centerX + triangleHeight).toFloat(), centerY + radius/2)
 
     close()
+}
+
+fun NavHostController.navigateSingleTopTo(route: String) = this.navigate(route) {
+    popUpTo(HomeDestination.route){saveState = true}
+    launchSingleTop = true
+    restoreState = true
 }

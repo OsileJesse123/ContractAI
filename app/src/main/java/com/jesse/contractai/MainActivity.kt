@@ -29,12 +29,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jesse.contractai.navigation.ContractAINavHost
 import com.jesse.contractai.navigation.ContractNatureDestination
+import com.jesse.contractai.navigation.CreateContractDestination
 import com.jesse.contractai.navigation.HomeDestination
+import com.jesse.contractai.navigation.ReviewContractDestination
 import com.jesse.contractai.navigation.SignInDestination
 import com.jesse.contractai.ui.components.ContractAITabRow
 import com.jesse.contractai.ui.screens.splash.SplashScreen
 import com.jesse.contractai.ui.theme.ContractAITheme
 import com.jesse.contractai.ui.theme.Dimens
+import com.jesse.contractai.util.navigateSingleTopTo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -74,9 +77,8 @@ fun MainScreen() {
             val currentDestination = currentBackStack?.destination
             val contractAIBottomNavScreens = listOf(
                 HomeDestination,
-                ContractNatureDestination,
-                ContractNatureDestination,
-                ContractNatureDestination
+                CreateContractDestination,
+                ReviewContractDestination
             )
             val currentScreen = contractAIBottomNavScreens.find { it.route == currentDestination?.route } ?: SignInDestination
             var bottomBarState by rememberSaveable{
@@ -102,7 +104,10 @@ fun MainScreen() {
                         ) {
                             ContractAITabRow(
                                 allScreens = contractAIBottomNavScreens,
-                                onTabSelected = {},
+                                onTabSelected = {
+                                    destination ->
+                                    navController.navigateSingleTopTo(destination.route)
+                                },
                                 currentScreen = currentScreen
                             )
                             Spacer(modifier = Modifier.height(height = 30.dp))
