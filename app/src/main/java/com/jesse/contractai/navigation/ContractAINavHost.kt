@@ -16,6 +16,7 @@ import com.jesse.contractai.ui.screens.create_contract.CreateContractRoute
 import com.jesse.contractai.ui.screens.forgot_password.ForgotPasswordRoute
 import com.jesse.contractai.ui.screens.home.HomeRoute
 import com.jesse.contractai.ui.screens.questions_screen.QuestionsRoute
+import com.jesse.contractai.ui.screens.review_contract.ReviewContractRoute
 import com.jesse.contractai.ui.screens.sign_in.SignInScreenRoute
 import com.jesse.contractai.ui.screens.sign_up.SignUpScreen
 import com.jesse.contractai.ui.screens.sign_up.SignUpScreenRoute
@@ -108,6 +109,11 @@ fun ContractAINavHost(
                     sharedViewModel.contractType = contractType
                     navHostController.navigate(ContractNatureDestination.route)
                 }
+            )
+        }
+        composable(route = ReviewContractDestination.route){
+            ReviewContractRoute(
+                onNavigateBack = {navHostController.navigateUp()}
             )
         }
         composable(route = ContractNatureDestination.route){

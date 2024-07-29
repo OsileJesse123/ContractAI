@@ -19,6 +19,7 @@ private val LightColorScheme = lightColorScheme(
     error = Red600,
     surface = Blue50,
     tertiary = Blue300,
+    outlineVariant = Grey500
 )
 
 @Composable

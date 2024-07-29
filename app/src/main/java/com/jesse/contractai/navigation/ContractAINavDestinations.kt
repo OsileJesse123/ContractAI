@@ -42,24 +42,34 @@ object HomeDestination: Destinations{
         get() = R.string.home
 }
 
-object ContractHistoryDestination: Destinations {
-    override val route: String
-        get() = "/contract_history"
-}
-
 object CreateContractDestination: Destinations{
     override val route: String
         get() = "/create_contract"
-}
-
-object ContractNatureDestination: Destinations{
-    override val route: String
-        get() = "contract_nature"
     override val icon: Int
         get() = R.drawable.ic_add_file
     override val iconDescription: Int
         get() = R.string.create_a_contract
 }
+
+object ReviewContractDestination: Destinations {
+    override val route: String
+        get() = "/review_contract"
+    override val icon: Int
+        get() = R.drawable.ic_file_search
+    override val iconDescription: Int
+        get() = R.string.file_search_icon
+}
+
+object ContractHistoryDestination: Destinations {
+    override val route: String
+        get() = "/contract_history"
+}
+
+object ContractNatureDestination: Destinations{
+    override val route: String
+        get() = "/contract_nature"
+}
+
 
 
 object QuestionsDestination: Destinations{
