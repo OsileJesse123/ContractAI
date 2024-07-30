@@ -91,6 +91,7 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.homeUiState.collectAsStateWithLifecycle()
+    val userDetails by viewModel.userDetails.collectAsStateWithLifecycle()
 
     DisposableEffect(Unit) {
         onDispose {
@@ -99,8 +100,12 @@ fun HomeRoute(
     }
     HomeScreen(
         uiState = uiState,
+        userDetails = userDetails,
         onNavigateToContractHistory = onNavigateToContractHistory,
-        onNavigateToLoginScreen = onNavigateToLoginScreen,
+        onSignOut = {
+            viewModel.signOut()
+            onNavigateToLoginScreen()
+        },
         updateBottomBarState = updateBottomBarState
     )
 }
@@ -110,7 +115,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateToContractHistory: () -> Unit,
     updateBottomBarState: (Boolean) -> Unit,
-    onNavigateToLoginScreen: () -> Unit,
+    onSignOut: () -> Unit,
+    userDetails: Pair<String, String>,
     uiState: HomeUiState
 ) {
 
@@ -133,9 +139,9 @@ fun HomeScreen(
     if (showLogoutDialog){
         LogoutDialog(
             onDismiss = { showLogoutDialog = false },
-            userName = uiState.userName,
-            userEmail = uiState.userEmail,
-            onLogout = onNavigateToLoginScreen
+            userName = userDetails.first,
+            userEmail = userDetails.second,
+            onLogout = onSignOut
         )
     }
 
@@ -195,7 +201,7 @@ fun HomeScreen(
         }
 
         Text(
-            text = stringResource(id = R.string.welcome_message, uiState.userName),
+            text = stringResource(id = R.string.welcome_message, userDetails.first),
             style = MaterialTheme.typography.titleSmall.copy(
                 fontSize = 26.sp
             )
@@ -566,10 +572,11 @@ fun ContractHintCard(
 fun HomeScreenPreview() {
     ContractAITheme {
         HomeScreen(
-            uiState = HomeUiState(userName = "Iriekefe", isLoading = true),
-            onNavigateToLoginScreen = {},
+            uiState = HomeUiState(isLoading = true),
+            onSignOut = {},
             onNavigateToContractHistory = {},
-            updateBottomBarState = {}
+            updateBottomBarState = {},
+            userDetails = Pair("Iriekefe", "iriekefe@gmail.com")
         )
     }
 }

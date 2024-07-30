@@ -3,6 +3,9 @@ package com.jesse.contractai.ui.screens.sign_up
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jesse.contractai.R
+import com.jesse.contractai.data.exceptions.AuthenticationException
+import com.jesse.contractai.data.exceptions.NetworkErrorException
+import com.jesse.contractai.data.repository.user_authentication.UserAuthenticationRepository
 import com.jesse.contractai.domain.use_case.ValidateEmailUseCase
 import com.jesse.contractai.domain.use_case.ValidateNameUseCase
 import com.jesse.contractai.domain.use_case.ValidatePasswordStrengthUseCase
@@ -18,7 +21,8 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val validateNameUseCase: ValidateNameUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
-    private val validatePasswordStrengthUseCase: ValidatePasswordStrengthUseCase
+    private val validatePasswordStrengthUseCase: ValidatePasswordStrengthUseCase,
+    private val userAuthenticationRepository: UserAuthenticationRepository
 ): ViewModel() {
 
     private val _signUpUiState: MutableStateFlow<SignUpUiState> = MutableStateFlow(SignUpUiState())
@@ -100,11 +104,38 @@ class SignUpViewModel @Inject constructor(
                         signUpUiState ->
                     signUpUiState.copy(isLoading = true)
                 }
-                delay(2_000)
-                _signUpUiState.update {
-                        signUpUiState ->
-                    signUpUiState.copy(navigateToNextScreen = true)
-                }
+                val result = userAuthenticationRepository.signUpWithEmailAndPassword(
+                    firstName = _signUpUiState.value.firstName,
+                    lastName = _signUpUiState.value.lastName,
+                    email = _signUpUiState.value.email,
+                    password = _signUpUiState.value.password
+                )
+                result
+                    .onSuccess {
+                        _signUpUiState.update {
+                                signUpUiState ->
+                            signUpUiState.copy(navigateToNextScreen = true)
+                        }
+                    }
+                    .onFailure {
+                        exception ->
+                        val errorMessage = when(exception){
+                            is AuthenticationException.NoUserException -> R.string.user_registered_but_user_null
+                            is AuthenticationException.EmailAlreadyInUseException -> R.string.email_already_in_use
+                            is AuthenticationException.AccountExistWithDifferentCredentialException -> R.string.account_already_exist
+                            is AuthenticationException.CredentialAlreadyInUseException -> R.string.credential_already_in_use
+                            is NetworkErrorException -> R.string.network_error_occured
+                            is Exception -> R.string.sign_up_failed
+                            else -> null
+                        }
+                        _signUpUiState.update {
+                                signUpUiState ->
+                            signUpUiState.copy(
+                                isLoading = false,
+                                errorMessage = errorMessage
+                            )
+                        }
+                    }
             }
         }
     }
@@ -148,6 +179,13 @@ class SignUpViewModel @Inject constructor(
         _signUpUiState.update {
             signUpUiState ->
             signUpUiState.copy(navigateToNextScreen = false, isLoading = false)
+        }
+    }
+
+    fun onErrorMessageShown(){
+        _signUpUiState.update {
+                signUpUiState ->
+            signUpUiState.copy(errorMessage = null)
         }
     }
 }

@@ -18,17 +18,4 @@ object UseCaseModule {
 
     @Provides
     fun providesEmailMatcher(emailMatcherImpl: EmailMatcherImpl): EmailMatcher = emailMatcherImpl
-
-
-    @Provides
-    fun provideValidateEmailUseCase(emailMatcher: EmailMatcher) = ValidateEmailUseCase(emailMatcher)
-
-    @Provides
-    fun provideValidatePasswordUseCase() = ValidatePasswordUseCase()
-
-    @Provides
-    fun provideValidateNameUseCase() = ValidateNameUseCase()
-
-    @Provides
-    fun provideValidatePasswordStrengthUseCase() = ValidatePasswordStrengthUseCase()
 }

@@ -4,11 +4,15 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.animation.with
 import androidx.compose.foundation.clickable
@@ -56,6 +60,7 @@ import com.jesse.contractai.ui.components.ContractAIGoogleSignInButton
 import com.jesse.contractai.ui.components.ContractAILoadingOverlay
 import com.jesse.contractai.ui.components.ContractAIOutlinedTextField
 import com.jesse.contractai.ui.components.ContractAIPasswordTrailingIcon
+import com.jesse.contractai.ui.components.ContractAISnackBar
 import com.jesse.contractai.ui.theme.Black800
 import com.jesse.contractai.ui.theme.ContractAITheme
 import com.jesse.contractai.ui.theme.Dimens
@@ -123,6 +128,9 @@ fun SignUpScreenRoute(
         },
         onNavigateToSignIn = onNavigateToSignIn,
         uiState = uiState,
+        onSnackBarShown = {
+           viewModel.onErrorMessageShown()
+        },
         beginAnimation = false
     )
 }
@@ -142,11 +150,11 @@ fun SignUpScreen(
     toggleConfirmPasswordVisibility: (Boolean) -> Unit,
     onTermsAndConditionsChecked: (Boolean) -> Unit,
     beginAnimation: Boolean,
+    onSnackBarShown: () -> Unit,
     uiState: SignUpUiState
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = modifier
@@ -441,6 +449,12 @@ fun SignUpScreen(
             }
         }
 
+       ContractAISnackBar(
+           modifier = Modifier,
+           message = uiState.errorMessage,
+           onSnackBarShown = onSnackBarShown
+       )
+
         AnimatedVisibility(
             visible = uiState.isLoading,
             exit = fadeOut(),
@@ -546,6 +560,7 @@ private fun SignUpScreenPreview() {
             onConfirmPasswordChanged = {},
             toggleConfirmPasswordVisibility = {},
             togglePasswordVisibility = {},
+            onSnackBarShown = {},
             beginAnimation = true
         )
     }

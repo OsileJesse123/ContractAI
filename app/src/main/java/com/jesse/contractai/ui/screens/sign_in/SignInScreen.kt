@@ -1,5 +1,8 @@
 package com.jesse.contractai.ui.screens.sign_in
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -25,6 +28,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -49,11 +53,13 @@ import com.jesse.contractai.ui.components.ContractAIGoogleSignInButton
 import com.jesse.contractai.ui.components.ContractAILoadingOverlay
 import com.jesse.contractai.ui.components.ContractAIOutlinedTextField
 import com.jesse.contractai.ui.components.ContractAIPasswordTrailingIcon
+import com.jesse.contractai.ui.components.ContractAISnackBar
 import com.jesse.contractai.ui.theme.ContractAITheme
 import com.jesse.contractai.ui.theme.Dimens
 import com.jesse.contractai.util.animationDelayTime
 import com.jesse.contractai.util.animationDelayTimeDifference
 import com.jesse.contractai.util.animationSpec
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreenRoute(
@@ -61,19 +67,34 @@ fun SignInScreenRoute(
     viewModel: SignInViewModel = hiltViewModel(),
     onNavigateToForgotPassword: () -> Unit,
     onNavigateToHome:() -> Unit,
+    onNavigateToVerifyEmail: () -> Unit,
     onNavigateToSignUp:() -> Unit
 ) {
     val uiState by viewModel.signInUiState.collectAsStateWithLifecycle()
+    val googleSignInLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
+            viewModel.signInWithGoogle(result.data)
+        }
 
-    LaunchedEffect(key1 = uiState.navigateToNextScreen) {
-        if (uiState.navigateToNextScreen){
-            onNavigateToHome()
+    LaunchedEffect(key1 = uiState.nextDestination) {
+        when(uiState.nextDestination){
+            NextDestination.HOME -> {
+                onNavigateToHome()
+                viewModel.onNavigateToNextScreen()
+            }
+            NextDestination.VERIFY_EMAIL -> {
+                onNavigateToVerifyEmail()
+                viewModel.onNavigateToNextScreen()
+            }
+            else -> {
+                // Do nothing
+            }
         }
     }
 
     SignInScreen(
         modifier = modifier,
-        onSignInWithGoogle = {viewModel.signInWithGoogle()},
+        onSignInWithGoogle = {googleSignInLauncher.launch(viewModel.getSignInIntent())},
         onSignIn = {viewModel.signIn()},
         uiState = uiState,
         onNavigateToForgotPassword = onNavigateToForgotPassword,
@@ -93,6 +114,7 @@ fun SignInScreenRoute(
             viewModel.rememberPassword(rememberPassword)
         },
         onNavigateToSignUp = onNavigateToSignUp,
+        onSnackBarShown = { viewModel.onErrorMessageShown() },
         beginAnimation = false
     )
 }
@@ -108,13 +130,13 @@ fun SignInScreen(
     togglePasswordVisibility:(Boolean) -> Unit,
     onRememberPassword: (Boolean) -> Unit,
     onNavigateToSignUp:() -> Unit,
+    onSnackBarShown: () -> Unit,
     beginAnimation: Boolean,
     uiState: SignInUiState
 ) {
     
     Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier
@@ -374,6 +396,12 @@ fun SignInScreen(
             }
         }
 
+        ContractAISnackBar(
+            modifier = Modifier,
+            message = uiState.errorMessage,
+            onSnackBarShown = onSnackBarShown
+        )
+
         AnimatedVisibility(
             visible = uiState.isLoading,
             exit = fadeOut(),
@@ -399,7 +427,8 @@ private fun SignInScreenPreview() {
             onRememberPassword = {},
             onSignInWithGoogle = {},
             onNavigateToSignUp = {},
-            beginAnimation = true
+            beginAnimation = true,
+            onSnackBarShown = {}
         )
     }
 }

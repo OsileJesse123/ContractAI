@@ -2,6 +2,7 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
@@ -80,6 +81,18 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
+    // Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+
+    // Firebase Analytics
+    implementation("com.google.firebase:firebase-analytics")
+
+    // Google Play services library
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    // Firebase Auth
+    implementation("com.google.firebase:firebase-auth")
+
     // Hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
@@ -96,6 +109,13 @@ dependencies {
 
     // Constraint Layout, Jetpack Compose
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0")
+
+    // Hilt WorkManager
+    implementation("androidx.hilt:hilt-work:1.2.0")
+    // When using Kotlin.
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
+    // Kotlin + coroutines
+    implementation ("androidx.work:work-runtime-ktx:2.9.0")
 
 
     testImplementation("junit:junit:4.13.2")

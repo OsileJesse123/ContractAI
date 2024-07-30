@@ -26,13 +26,14 @@ import com.jesse.contractai.ui.shared.SharedViewModel
 @Composable
 fun ContractAINavHost(
     modifier: Modifier = Modifier,
+    startDestination: Destinations,
     updateBottomBarState: (Boolean) -> Unit,
     navHostController: NavHostController
 ) {
 
     val sharedViewModel: SharedViewModel = hiltViewModel()
 
-    NavHost(navController = navHostController, startDestination = SignInDestination.route){
+    NavHost(navController = navHostController, startDestination = startDestination.route){
         composable(route = SignInDestination.route){
             SignInScreenRoute(
                 onNavigateToForgotPassword = {
@@ -47,6 +48,9 @@ fun ContractAINavHost(
                     navHostController.navigate(SignUpDestination.route){
                         popUpTo(SignInDestination.route){inclusive = true}
                     }
+                },
+                onNavigateToVerifyEmail = {
+                    navHostController.navigate(VerifyEmailDestination.route)
                 }
             )
         }
