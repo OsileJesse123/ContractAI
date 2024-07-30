@@ -41,11 +41,14 @@ import com.jesse.contractai.ui.components.ContractAIButton
 import com.jesse.contractai.ui.components.ContractAIErrorText
 import com.jesse.contractai.ui.components.ContractAILoadingOverlay
 import com.jesse.contractai.ui.components.ContractAIOutlinedTextField
+import com.jesse.contractai.ui.components.ContractAISnackBar
 import com.jesse.contractai.ui.theme.ContractAITheme
 import com.jesse.contractai.ui.theme.Dimens
+import com.jesse.contractai.ui.theme.Green600
 import com.jesse.contractai.util.animationDelayTime
 import com.jesse.contractai.util.animationDelayTimeDifference
 import com.jesse.contractai.util.animationSpec
+import com.jesse.contractai.util.resetPasswordSuccessMessage
 
 @Composable
 fun ForgotPasswordRoute(
@@ -66,6 +69,9 @@ fun ForgotPasswordRoute(
         },
         onResetPassword = {
             viewModel.reset()
+        },
+        onSnackBarShown = {
+            viewModel.onErrorMessageShown()
         }
     )
 }
@@ -77,11 +83,11 @@ fun ForgotPasswordScreen(
     onEmailChanged: (String) -> Unit,
     onResetPassword: () -> Unit,
     beginAnimation: Boolean,
+    onSnackBarShown: () -> Unit,
     uiState: ForgotPasswordUiState
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = modifier.fillMaxSize()
     ){
         Column(
             modifier = Modifier
@@ -209,6 +215,12 @@ fun ForgotPasswordScreen(
                 )
             }
         }
+        ContractAISnackBar(
+            modifier = Modifier,
+            message = uiState.message,
+            onSnackBarShown = onSnackBarShown,
+            barColor = if (uiState.message == resetPasswordSuccessMessage) Green600 else MaterialTheme.colorScheme.error
+        )
         AnimatedVisibility(
             visible = uiState.isLoading,
             exit = fadeOut(),
@@ -228,7 +240,8 @@ private fun ForgotPasswordScreenPreview() {
             beginAnimation = true,
             onEmailChanged = {},
             onResetPassword = {},
-            uiState = ForgotPasswordUiState()
+            uiState = ForgotPasswordUiState(),
+            onSnackBarShown = {}
         )
     }
 }

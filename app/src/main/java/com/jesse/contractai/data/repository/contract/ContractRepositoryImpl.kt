@@ -1,4 +1,4 @@
-package com.jesse.contractai.data.repository
+package com.jesse.contractai.data.repository.contract
 
 import android.util.Log
 import com.jesse.contractai.data.exceptions.NoResponseException

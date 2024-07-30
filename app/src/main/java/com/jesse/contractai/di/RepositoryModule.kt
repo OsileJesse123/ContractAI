@@ -1,7 +1,9 @@
 package com.jesse.contractai.di
 
-import com.jesse.contractai.data.repository.ContractRepository
-import com.jesse.contractai.data.repository.ContractRepositoryImpl
+import com.jesse.contractai.data.repository.contract.ContractRepository
+import com.jesse.contractai.data.repository.contract.ContractRepositoryImpl
+import com.jesse.contractai.data.repository.user_authentication.UserAuthenticationRepository
+import com.jesse.contractai.data.repository.user_authentication.UserAuthenticationRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +15,8 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun bindRepository(repoImpl: ContractRepositoryImpl): ContractRepository
+    abstract fun bindContractRepository(repoImpl: ContractRepositoryImpl): ContractRepository
+
+    @Binds
+    abstract fun bindUserAuthenticationRepository(repoImpl: UserAuthenticationRepositoryImpl): UserAuthenticationRepository
 }

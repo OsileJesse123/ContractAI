@@ -13,7 +13,7 @@ data class SignInUiState(
     val rememberPassword: Boolean = false,
     @StringRes
     val errorMessage: Int? = null,
-    val navigateToNextScreen: Boolean = false,
+    val nextDestination: NextDestination? = null,
     val isPasswordVisible: Boolean = true
 ){
     fun isFormValid(): Boolean =

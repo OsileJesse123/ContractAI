@@ -38,6 +38,7 @@ import com.jesse.contractai.ui.animations.SlideDirection
 import com.jesse.contractai.ui.components.ContractAIBackButton
 import com.jesse.contractai.ui.components.ContractAIButton
 import com.jesse.contractai.ui.components.ContractAILoadingOverlay
+import com.jesse.contractai.ui.components.ContractAISnackBar
 import com.jesse.contractai.ui.theme.ContractAITheme
 import com.jesse.contractai.ui.theme.Dimens
 import com.jesse.contractai.util.animationDelayTime
@@ -52,7 +53,13 @@ fun VerifyEmailRoute(
     viewModel: VerifyEmailViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.verifyEmailUiState.collectAsStateWithLifecycle()
+    val userEmail by viewModel.userEmail.collectAsStateWithLifecycle()
 
+    LaunchedEffect(key1 = uiState.navigateToNextScreen) {
+        if (uiState.navigateToNextScreen){
+            onNavigateToNextScreen()
+        }
+    }
     VerifyEmailScreen(
         modifier = modifier,
         beginAnimation = false,
@@ -61,7 +68,11 @@ fun VerifyEmailRoute(
         onResendEmailLink = {
            viewModel.sendUiAction(VerifyEmailUiAction.Send)
         },
-        uiState = uiState
+        uiState = uiState,
+        userEmail = userEmail,
+        onSnackBarShown = {
+            viewModel.sendUiAction(VerifyEmailUiAction.OnErrorMessageShown)
+        }
     )
 }
 
@@ -72,11 +83,12 @@ fun VerifyEmailScreen(
     onNavigateToNextScreen: () -> Unit,
     onResendEmailLink: () -> Unit,
     uiState: VerifyEmailUiState,
+    userEmail: String,
+    onSnackBarShown: () -> Unit,
     beginAnimation: Boolean
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier
@@ -158,7 +170,7 @@ fun VerifyEmailScreen(
             ) {
                 Text(
                     modifier = it.fillMaxWidth(),
-                    text = stringResource(id = R.string.verify_email_address_instructions),
+                    text = stringResource(id = R.string.verify_email_address_instructions, userEmail),
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontSize = 14.sp,
                         lineHeight = 24.sp
@@ -224,6 +236,12 @@ fun VerifyEmailScreen(
             }
         }
 
+        ContractAISnackBar(
+            modifier = Modifier,
+            message = uiState.errorMessage,
+            onSnackBarShown = onSnackBarShown
+        )
+
         AnimatedVisibility(
             visible = uiState.isLoading,
             exit = fadeOut(),
@@ -243,7 +261,9 @@ private fun VerifyEmailScreenPreview() {
             beginAnimation = true,
             onNavigateToNextScreen = {},
             onResendEmailLink = {},
-            uiState = VerifyEmailUiState()
+            userEmail = "user@gmail.com",
+            uiState = VerifyEmailUiState(),
+            onSnackBarShown = {}
         )
     }
 }

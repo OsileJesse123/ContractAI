@@ -1,4 +1,4 @@
-package com.jesse.contractai.data.repository
+package com.jesse.contractai.data.repository.contract
 
 import com.jesse.contractai.data.model.ContractJson
 import com.jesse.contractai.data.model.TokenResponse

@@ -79,4 +79,22 @@
     <string name="start_review">Start Review</string>
     <string name="file_icon">file icon</string>
     <string name="delete_icon">delete icon</string>
+    <string name="user_registered_but_user_null">User Sign Up successful, but no user was created</string>
+    <string name="email_already_in_use">The email address is already in use by another account.</string>
+    <string name="account_already_exist">Account already exists with different credential</string>
+    <string name="credential_already_in_use">Credential is already in use</string>
+    <string name="network_error_occured">A network error has occurred</string>
+    <string name="sign_up_failed">Sign Up failed</string>
+    <string name="too_many_requests">Requests from this device have been blocked due to unusual activity. Try again later</string>
+    <string name="send_email_link_failed">Send Email verification link failed</string>
+    <string name="user_logged_in_but_user_null">Login failed, user not found</string>
+    <string name="invalid_credentials">Invalid credentials</string>
+    <string name="user_disabled">User seems to have been disabled</string>
+    <string name="user_token_expired">User token seems to have expired</string>
+    <string name="invalid_user_token">Invalid user token</string>
+    <string name="sign_in_failed">Sign in failed</string>
+    <string name="sign_in_failed_with_google_failed">Sign in with Google failed</string>
+    <string name="reset_password_email">Reset password email sent successfully</string>
+    <string name="reset_password_email_failed">Reset password email not sent</string>
+    <string name="default_web_client_id">1049058456170-obikql43p5drlndpgvnuc7jag9ef0jj0.apps.googleusercontent.com</string>
 </resources>
