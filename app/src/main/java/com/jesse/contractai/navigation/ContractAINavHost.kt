@@ -14,6 +14,7 @@ import com.jesse.contractai.ui.screens.contract_history.ContractHistoryRoute
 import com.jesse.contractai.ui.screens.contract_nature.ContractNatureRoute
 import com.jesse.contractai.ui.screens.create_contract.CreateContractRoute
 import com.jesse.contractai.ui.screens.forgot_password.ForgotPasswordRoute
+import com.jesse.contractai.ui.screens.generate_contract.GenerateContractRoute
 import com.jesse.contractai.ui.screens.home.HomeRoute
 import com.jesse.contractai.ui.screens.questions_screen.QuestionsRoute
 import com.jesse.contractai.ui.screens.review_contract.ReviewContractRoute
@@ -33,7 +34,11 @@ fun ContractAINavHost(
 
     val sharedViewModel: SharedViewModel = hiltViewModel()
 
-    NavHost(navController = navHostController, startDestination = startDestination.route){
+    NavHost(
+        modifier = modifier,
+        navController = navHostController,
+        startDestination = startDestination.route
+    ){
         composable(route = SignInDestination.route){
             SignInScreenRoute(
                 onNavigateToForgotPassword = {
@@ -95,13 +100,21 @@ fun ContractAINavHost(
                         popUpTo(HomeDestination.route){ inclusive = true }
                     }
                 },
-                updateBottomBarState = updateBottomBarState
+                updateBottomBarState = updateBottomBarState,
+                onNavigateToGeneratedContractDetails = {
+                        timeStamp ->
+                    navHostController.navigate("${GenerateContractDestination.route}/$timeStamp")
+                }
             )
         }
         composable(route = ContractHistoryDestination.route){
             ContractHistoryRoute(
                 onNavigateBack = {
                     navHostController.navigateUp()
+                },
+                onNavigateToGeneratedContractDetails = {
+                        timeStamp ->
+                    navHostController.navigate("${GenerateContractDestination.route}/$timeStamp")
                 }
             )
         }
@@ -111,6 +124,7 @@ fun ContractAINavHost(
                 onContinue = {
                     contractType ->
                     sharedViewModel.contractType = contractType
+                    Log.e("ContractType", "Contract Type: $contractType")
                     navHostController.navigate(ContractNatureDestination.route)
                 }
             )
@@ -127,6 +141,11 @@ fun ContractAINavHost(
                     contractNature ->
                     sharedViewModel.natureOfContract = contractNature
                     navHostController.navigate(QuestionsDestination.route)
+                },
+                onCancel = {
+                    navHostController.navigate(HomeDestination.route){
+                        popUpTo(0){inclusive = true}
+                    }
                 }
             )
         }
@@ -137,8 +156,33 @@ fun ContractAINavHost(
                 contractType = sharedViewModel.contractType,
                 contractNature = sharedViewModel.natureOfContract,
                 onNavigateToGenerateContract = {
-                    answers ->
-                    sharedViewModel.answers = answers
+                    timeStamp ->
+                    navHostController.navigate("${GenerateContractDestination.route}/$timeStamp"){
+                        popUpTo(0){inclusive = true}
+                    }
+                },
+                onCancel = {
+                    navHostController.navigate(HomeDestination.route){
+                        popUpTo(0){inclusive = true}
+                    }
+                },
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                }
+            )
+        }
+        composable(
+            route = GenerateContractDestination.routeWithArgs,
+            arguments = GenerateContractDestination.arguments
+        ){
+            navBackStackEntry ->
+            val timeStamp = navBackStackEntry.arguments?.getLong(GenerateContractDestination.timeStampArg) ?: 0
+            GenerateContractRoute(
+                timeStamp = timeStamp,
+                onNavigateHome = {
+                    navHostController.navigate(HomeDestination.route){
+                        popUpTo(0){inclusive = true}
+                    }
                 }
             )
         }

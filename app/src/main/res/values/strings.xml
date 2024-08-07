@@ -16,6 +16,7 @@
     <string name="generating_contract">Your contract is under construction</string>
     <string name="your_contract_is_ready">Your contract is ready!</string>
     <string name="review_contract">Review Contract</string>
+    <string name="review_and_revise_contract">Please review and revise where necessary, after you download.</string>
     <string name="review_any_kind_of_contract">Review any kind of contract</string>
     <string name="review_contract_instruction">Please review and revise where necessary, after you download.</string>
     <string name="review_contract_hint">Upload the contract you want reviewed and wait for the report</string>
@@ -38,7 +39,6 @@
     <string name="sign_up">Sign Up</string>
     <string name="this_field_cannot_be_blank">This field cannot be blank</string>
     <string name="invalid_email">Invalid email</string>
-    <string name="sign_up_with_google">Sign Up with Google</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="password">Password</string>
@@ -94,7 +94,29 @@
     <string name="invalid_user_token">Invalid user token</string>
     <string name="sign_in_failed">Sign in failed</string>
     <string name="sign_in_failed_with_google_failed">Sign in with Google failed</string>
+    <string name="sign_up_failed_with_google_failed">Sign up with Google failed</string>
     <string name="reset_password_email">Reset password email sent successfully</string>
     <string name="reset_password_email_failed">Reset password email not sent</string>
     <string name="default_web_client_id">1049058456170-obikql43p5drlndpgvnuc7jag9ef0jj0.apps.googleusercontent.com</string>
+    <string name="home_icon">home icon</string>
+    <string name="bot_icon">robot head icon</string>
+    <string name="download_icon">download file icon</string>
+    <string name="question_number_range">Question %d of %d</string>
+    <string name="contract_ai_disclaimer">ContractAI may display inaccurate info, including about people, so double-check all responses.</string>
+    <string name="failed_to_generate_contract">Failed to generate contract</string>
+    <string name="refresh_icon">refresh icon</string>
+    <string name="which_country_law_should_this_adhere_to">Which country\'s laws should this contract adhere to?</string>
+    <string name="no_generated_contract">No Generated Contract</string>
+    <string name="are_you_satisfied">Are you satisfied with the generated contract?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="satisfied_message">Thank you for using contract AI. You can download generated contract or go back to home screen.</string>
+    <string name="ok">Ok</string>
+    <string name="why_are_you_unsatisfied">Why are you unsatisfied with the generated contract?</string>
+    <string name="sent_icon">sent icon</string>
+    <string name="enter_complaint_here">Enter complaint here</string>
+    <string name="failed_to_regenerate_contract">Failed to regenerate contract</string>
+    <string name="re_generating_contract">Your contract is being modified</string>
+    <string name="specify_your_contract_type_here">Specify your contract type here</string>
+    <string name="no_contract_history">No Contract History</string>
 </resources>

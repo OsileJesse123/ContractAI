@@ -3,10 +3,8 @@ package com.jesse.contractai.ui.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jesse.contractai.data.repository.user_authentication.UserAuthenticationRepository
+import com.jesse.contractai.domain.use_case.ContractResultsUseCase
 import com.jesse.contractai.domain.use_case.SignOutUseCase
-import com.jesse.contractai.ui.model.ContractHistoryType
-import com.jesse.contractai.ui.model.ContractResult
-import com.jesse.contractai.ui.sign_in_handler.GoogleSignInHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,8 +17,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val userAuthenticationRepository: UserAuthenticationRepository,
-    private val singOutUseCase: SignOutUseCase
+    userAuthenticationRepository: UserAuthenticationRepository,
+    private val signOutUseCase: SignOutUseCase,
+    private val contractResultsUseCase: ContractResultsUseCase
 ): ViewModel() {
 
     /**
@@ -43,19 +42,15 @@ class HomeViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = Pair("", "")
     )
+    
 
-    private val _homeUiState: MutableStateFlow<HomeUiState> = MutableStateFlow(
-        HomeUiState(
-            contractHistory = listOf(
-                ContractResult(id = "dkjfd", type = ContractHistoryType.CONTRACT, title = "Employment Contract", content = "dkjfdkjfd", timeStamp = "20 July, 2024"),
-                ContractResult(id = "dfjdkf", type = ContractHistoryType.CONTRACT_REVIEW, title = "Review Contract", content = "dkjfdkjfd", timeStamp = "20 July, 2024"),
-                ContractResult(id = "ckvsjdfoe", type = ContractHistoryType.CONTRACT, title = "Employment Contract", content = "dkjfdkjfd", timeStamp = "20 July, 2024")
-            )
-        )
+    val contractHistoryItems = contractResultsUseCase().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Lazily,
+        initialValue = listOf()
     )
-    val homeUiState get() = _homeUiState.asStateFlow()
 
     fun signOut(){
-        singOutUseCase()
+        signOutUseCase()
     }
 }

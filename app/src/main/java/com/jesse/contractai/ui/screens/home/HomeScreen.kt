@@ -73,6 +73,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jesse.contractai.R
 import com.jesse.contractai.ui.components.ContractHistoryItem
+import com.jesse.contractai.ui.model.ContractResult
 import com.jesse.contractai.ui.theme.Blue600
 import com.jesse.contractai.ui.theme.ContractAITheme
 import com.jesse.contractai.ui.theme.Dimens
@@ -88,9 +89,10 @@ fun HomeRoute(
     onNavigateToContractHistory: () -> Unit,
     onNavigateToLoginScreen: () -> Unit,
     updateBottomBarState: (Boolean) -> Unit,
+    onNavigateToGeneratedContractDetails: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.homeUiState.collectAsStateWithLifecycle()
+    val contractHistoryItems by viewModel.contractHistoryItems.collectAsStateWithLifecycle()
     val userDetails by viewModel.userDetails.collectAsStateWithLifecycle()
 
     DisposableEffect(Unit) {
@@ -99,25 +101,27 @@ fun HomeRoute(
         }
     }
     HomeScreen(
-        uiState = uiState,
+        contractHistoryItems = contractHistoryItems,
         userDetails = userDetails,
         onNavigateToContractHistory = onNavigateToContractHistory,
         onSignOut = {
             viewModel.signOut()
             onNavigateToLoginScreen()
         },
-        updateBottomBarState = updateBottomBarState
+        updateBottomBarState = updateBottomBarState,
+        onNavigateToGeneratedContractDetails = onNavigateToGeneratedContractDetails
     )
 }
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    contractHistoryItems: List<ContractResult>,
     onNavigateToContractHistory: () -> Unit,
+    onNavigateToGeneratedContractDetails: (Long) -> Unit,
     updateBottomBarState: (Boolean) -> Unit,
     onSignOut: () -> Unit,
-    userDetails: Pair<String, String>,
-    uiState: HomeUiState
+    userDetails: Pair<String, String>
 ) {
 
     var showLogoutDialog by remember {
@@ -260,7 +264,7 @@ fun HomeScreen(
                     fontSize = 16.sp
                 )
             )
-            if (uiState.contractHistory.isNotEmpty()){
+            if (contractHistoryItems.size > 3){
                 Text(
                     modifier = Modifier
                         .clickable {
@@ -274,32 +278,29 @@ fun HomeScreen(
             }
         }
 
-        if (uiState.contractHistory.isNotEmpty()){
-            uiState.contractHistory.forEach {
+        if (contractHistoryItems.isNotEmpty()){
+            contractHistoryItems.take(3).forEach {
                 contractResult ->
                 ContractHistoryItem(
                     icon = contractResult.getContractResultIcon(),
                     iconDescription = contractResult.getContractResultIconDescription(),
                     title = contractResult.title,
-                    timeStamp = contractResult.timeStamp
+                    timeStamp = contractResult.getFormattedTime(),
+                    onClick = {
+                        when(contractResult){
+                            is ContractResult.GeneratedContractResult -> {
+                                onNavigateToGeneratedContractDetails(contractResult.timeStamp)
+                            }
+                            is ContractResult.ReviewedContractResult -> {
+
+                            }
+                        }
+                    }
                 )
             }
         }
-        if(uiState.contractHistory.isEmpty() && !uiState.isLoading){
+        if(contractHistoryItems.isEmpty()){
             EmptyContractHistory(modifier = Modifier.padding(top = Dimens.marginSmall))
-        }
-        if(uiState.contractHistory.isEmpty() && uiState.isLoading){
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
-            ){
-                CircularProgressIndicator(
-                    modifier = Modifier.width(64.dp),
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
         }
         Spacer(modifier = Modifier.height(height = Dimens.marginMedium))
     }
@@ -572,11 +573,12 @@ fun ContractHintCard(
 fun HomeScreenPreview() {
     ContractAITheme {
         HomeScreen(
-            uiState = HomeUiState(isLoading = true),
             onSignOut = {},
             onNavigateToContractHistory = {},
             updateBottomBarState = {},
-            userDetails = Pair("Iriekefe", "iriekefe@gmail.com")
+            userDetails = Pair("Iriekefe", "iriekefe@gmail.com"),
+            contractHistoryItems = listOf(),
+            onNavigateToGeneratedContractDetails = {}
         )
     }
 }

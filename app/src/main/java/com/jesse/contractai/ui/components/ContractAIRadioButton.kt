@@ -1,5 +1,6 @@
 package com.jesse.contractai.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -13,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jesse.contractai.data.model.ContractOption
+import com.jesse.contractai.data.network.model.ContractOption
 import com.jesse.contractai.ui.theme.ContractAITheme
 
 @Composable
@@ -24,7 +25,9 @@ fun ContractAIRadioButton(
     onClick: (Int) -> Unit
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.clickable {
+           onClick(index)
+        },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         RadioButton(

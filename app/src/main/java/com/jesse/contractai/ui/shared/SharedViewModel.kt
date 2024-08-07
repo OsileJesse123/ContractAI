@@ -17,9 +17,5 @@ class SharedViewModel @Inject constructor(): ViewModel() {
             if (value.isNotEmpty())
                 field = value
         }
-    var answers: List<String> = listOf()
-        set(value) {
-            if (value.isNotEmpty())
-                field = value
-        }
+
 }

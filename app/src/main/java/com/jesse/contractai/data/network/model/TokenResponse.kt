@@ -1,4 +1,4 @@
-package com.jesse.contractai.data.model
+package com.jesse.contractai.data.network.model
 
 
 data class TokenResponse(
