@@ -60,7 +60,7 @@ fun ContractAIButton(
         )
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier,
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -68,8 +68,8 @@ fun ContractAIButton(
                 text = text,
                 style = MaterialTheme.typography.labelLarge
             )
-            Spacer(modifier = Modifier.width(width = Dimens.marginExtraSmall))
             if (icon != null && iconDescription != null){
+                Spacer(modifier = Modifier.width(width = Dimens.marginExtraSmall))
                 Icon(
                     painter = painterResource(id = icon),
                     contentDescription = stringResource(id = iconDescription)

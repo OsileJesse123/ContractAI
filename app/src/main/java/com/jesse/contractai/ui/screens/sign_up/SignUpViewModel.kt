@@ -1,5 +1,6 @@
 package com.jesse.contractai.ui.screens.sign_up
 
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jesse.contractai.R
@@ -9,6 +10,9 @@ import com.jesse.contractai.data.repository.user_authentication.UserAuthenticati
 import com.jesse.contractai.domain.use_case.ValidateEmailUseCase
 import com.jesse.contractai.domain.use_case.ValidateNameUseCase
 import com.jesse.contractai.domain.use_case.ValidatePasswordStrengthUseCase
+import com.jesse.contractai.ui.screens.sign_in.NextDestination
+import com.jesse.contractai.ui.sign_in_handler.GoogleSignInHandler
+import com.jesse.contractai.util.SignInMethod
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -136,20 +140,6 @@ class SignUpViewModel @Inject constructor(
                             )
                         }
                     }
-            }
-        }
-    }
-
-    fun signUpWithGoogle(){
-        viewModelScope.launch {
-            _signUpUiState.update {
-                    signUpUiState ->
-                signUpUiState.copy(isLoading = true)
-            }
-            delay(2_000)
-            _signUpUiState.update {
-                    signUpUiState ->
-                signUpUiState.copy(isLoading = false, navigateToNextScreen = true)
             }
         }
     }

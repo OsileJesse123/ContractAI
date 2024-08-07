@@ -102,7 +102,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 
     // Gemini
-    implementation("com.google.ai.client.generativeai:generativeai:0.2.2")
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
@@ -115,7 +115,19 @@ dependencies {
     // When using Kotlin.
     kapt("androidx.hilt:hilt-compiler:1.2.0")
     // Kotlin + coroutines
-    implementation ("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
+    val roomVersion = "2.6.1"
+    // Room
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
+    // Security
+    implementation("androidx.security:security-crypto:1.0.0")
+
+    // Sqlcipher
+    implementation("net.zetetic:android-database-sqlcipher:4.5.0")
 
 
     testImplementation("junit:junit:4.13.2")

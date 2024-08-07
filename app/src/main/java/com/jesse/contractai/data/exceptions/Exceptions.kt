@@ -5,6 +5,12 @@ class NoResponseException: Exception()
 // Network Error Exception
 class NetworkErrorException: Exception()
 
+// Unauthorized Exception
+class UnauthorizedException: Exception()
+
+// Server Error Exception
+class ServerErrorException: Exception()
+
 // Authentication Exceptions
 sealed class AuthenticationException: Exception(){
     class NoUserException: AuthenticationException()
@@ -22,3 +28,4 @@ sealed class AuthenticationException: Exception(){
     class InvalidUserException: AuthenticationException()
     class SignInCancelledException: AuthenticationException()
 }
+

@@ -1,6 +1,6 @@
 package com.jesse.contractai.data.network.service
 
-import com.jesse.contractai.data.model.TokenResponse
+import com.jesse.contractai.data.network.model.TokenResponse
 
 interface TokenService {
     suspend fun getAccessToken(

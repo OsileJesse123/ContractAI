@@ -2,6 +2,7 @@ package com.jesse.contractai.ui.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,10 +33,15 @@ fun ContractHistoryItem(
     @StringRes
     iconDescription: Int,
     title: String,
-    timeStamp: String
+    timeStamp: String,
+    onClick: () -> Unit
 ) {
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            }
     ) {
         Row(
         ) {
@@ -74,7 +80,8 @@ private fun ContractHistoryItemPreview() {
             icon = R.drawable.ic_add_file,
             iconDescription = R.string.file_search_icon,
             title = "Employment Contract",
-            timeStamp = "09 July, 2024"
+            timeStamp = "09 July, 2024",
+            onClick = {}
         )
     }
 }

@@ -3,6 +3,8 @@ package com.jesse.contractai.navigation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.jesse.contractai.R
 
 interface Destinations{
@@ -70,8 +72,14 @@ object ContractNatureDestination: Destinations{
         get() = "/contract_nature"
 }
 
-
-
 object QuestionsDestination: Destinations{
     override val route: String = "/question_destination"
+}
+
+object GenerateContractDestination: Destinations{
+    override val route: String
+        get() = "/generate_contract"
+    val timeStampArg = "time_stamp"
+    val routeWithArgs = "$route/{$timeStampArg}"
+    val arguments = listOf(navArgument(timeStampArg){type = NavType.LongType})
 }

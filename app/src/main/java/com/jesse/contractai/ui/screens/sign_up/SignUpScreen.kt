@@ -91,9 +91,6 @@ fun SignUpScreenRoute(
         onSignUp = {
            viewModel.signUp()
         },
-        onSignInWithGoogle = {
-           viewModel.signUpWithGoogle()
-        },
         onFirstNameChanged = {
             firstName ->
             viewModel.validateFirstName(firstName)
@@ -139,7 +136,6 @@ fun SignUpScreenRoute(
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     onSignUp: () -> Unit,
-    onSignInWithGoogle: () -> Unit,
     onNavigateToSignIn: () -> Unit,
     onFirstNameChanged: (String) -> Unit,
     onLastNameChanged: (String) -> Unit,
@@ -192,21 +188,6 @@ fun SignUpScreen(
                 offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 1),
                 beginAnimation = beginAnimation
             ) {
-                ContractAIGoogleSignInButton(
-                    modifier = it,
-                    onClick = onSignInWithGoogle,
-                    title = stringResource(id = R.string.sign_up_with_google),
-                    isEnabled = !uiState.isLoading
-                )
-            }
-
-            ContractAISlideInAnimation(
-                modifier = Modifier,
-                direction = SlideDirection.END,
-                animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 2),
-                beginAnimation = beginAnimation
-            ) {
                 Divider(
                     modifier = it.padding(vertical = 20.dp)
                 )
@@ -216,7 +197,7 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 3),
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 2),
                 beginAnimation = beginAnimation
             ) {
                 ContractAIOutlinedTextField(
@@ -241,7 +222,7 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 4),
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 3),
                 beginAnimation = beginAnimation
             ) {
                 ContractAIOutlinedTextField(
@@ -266,7 +247,7 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 5),
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 4),
                 beginAnimation = beginAnimation
             ) {
                 ContractAIOutlinedTextField(
@@ -291,7 +272,7 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 6),
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 5),
                 beginAnimation = beginAnimation
             ) {
                 Column(
@@ -336,7 +317,7 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 7),
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 6),
                 beginAnimation = beginAnimation
             ) {
                 ContractAIOutlinedTextField(
@@ -372,7 +353,7 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 8),
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 7),
                 beginAnimation = beginAnimation
             ) {
                 Row(
@@ -404,7 +385,7 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 9),
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 8),
                 beginAnimation = beginAnimation
             ) {
                 ContractAIButton(
@@ -421,7 +402,7 @@ fun SignUpScreen(
                 modifier = Modifier,
                 direction = SlideDirection.END,
                 animationSpec = animationSpec,
-                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 10),
+                offsetAnimationDelay = animationDelayTime + (animationDelayTimeDifference * 9),
                 beginAnimation = beginAnimation
             ) {
                 Row(
@@ -548,7 +529,6 @@ fun ContractAIPasswordStrengthComposable(
 private fun SignUpScreenPreview() {
     ContractAITheme {
         SignUpScreen(
-            onSignInWithGoogle = {},
             onNavigateToSignIn = {},
             uiState = SignUpUiState(),
             onEmailChanged = {},
