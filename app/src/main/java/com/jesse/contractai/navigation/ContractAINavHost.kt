@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.jesse.contractai.ui.screens.contract_history.ContractHistoryRoute
 import com.jesse.contractai.ui.screens.contract_nature.ContractNatureRoute
+import com.jesse.contractai.ui.screens.conversation.ConversationRoute
 import com.jesse.contractai.ui.screens.create_contract.CreateContractRoute
 import com.jesse.contractai.ui.screens.forgot_password.ForgotPasswordRoute
 import com.jesse.contractai.ui.screens.generate_contract.GenerateContractRoute
@@ -104,6 +105,10 @@ fun ContractAINavHost(
                 onNavigateToGeneratedContractDetails = {
                         timeStamp ->
                     navHostController.navigate("${GenerateContractDestination.route}/$timeStamp")
+                },
+                onNavigateToReviewedContractDetails = {
+                    timeStamp ->
+                    navHostController.navigate("${ConversationDestination.route}/$timeStamp")
                 }
             )
         }
@@ -115,6 +120,10 @@ fun ContractAINavHost(
                 onNavigateToGeneratedContractDetails = {
                         timeStamp ->
                     navHostController.navigate("${GenerateContractDestination.route}/$timeStamp")
+                },
+                onNavigateToReviewedContractDetails = {
+                        timeStamp ->
+                    navHostController.navigate("${ConversationDestination.route}/$timeStamp")
                 }
             )
         }
@@ -131,7 +140,25 @@ fun ContractAINavHost(
         }
         composable(route = ReviewContractDestination.route){
             ReviewContractRoute(
-                onNavigateBack = {navHostController.navigateUp()}
+                onNavigateBack = {navHostController.navigateUp()},
+                onNavigateToNextScreen = {
+                    reviewedContractTimeStamp ->
+                    navHostController.navigate("${ConversationDestination.route}/$reviewedContractTimeStamp")
+                }
+            )
+        }
+        composable(
+            route = ConversationDestination.routeWithArgs,
+            arguments = ConversationDestination.arguments
+        ){
+            navBackStackEntry ->
+            val reviewedContractTimeStamp = navBackStackEntry.arguments?.getLong(ConversationDestination.reviewedContractTimeStampArg) ?: 0
+            Log.e("ConversationRoute", "Convo route: $reviewedContractTimeStamp")
+            ConversationRoute(
+                reviewedContractTimeStamp = reviewedContractTimeStamp,
+                onNavigateBack = {
+                    navHostController.navigateUp()
+                }
             )
         }
         composable(route = ContractNatureDestination.route){

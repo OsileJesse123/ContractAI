@@ -348,7 +348,6 @@ fun GenerateContractScreen(
                         color = MaterialTheme.colorScheme.tertiary
                     )
                 )
-
             }
         }
     }

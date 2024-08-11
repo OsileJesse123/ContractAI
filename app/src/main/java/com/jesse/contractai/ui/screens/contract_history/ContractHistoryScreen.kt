@@ -41,6 +41,7 @@ import com.jesse.contractai.ui.theme.Dimens
 fun ContractHistoryRoute(
     modifier: Modifier = Modifier,
     onNavigateToGeneratedContractDetails: (Long) -> Unit,
+    onNavigateToReviewedContractDetails: (Long) -> Unit,
     viewModel: ContractHistoryViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit
 ) {
@@ -50,7 +51,8 @@ fun ContractHistoryRoute(
         modifier = modifier,
         onNavigateBack = onNavigateBack,
         contractHistory = contractResults,
-        onNavigateToGeneratedContractDetails = onNavigateToGeneratedContractDetails
+        onNavigateToGeneratedContractDetails = onNavigateToGeneratedContractDetails,
+        onNavigateToReviewedContractDetails = onNavigateToReviewedContractDetails
     )
 }
 
@@ -59,6 +61,7 @@ fun ContractHistoryRoute(
 fun ContractHistoryScreen(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
+    onNavigateToReviewedContractDetails: (Long) -> Unit,
     onNavigateToGeneratedContractDetails: (Long) -> Unit,
     contractHistory: List<ContractResult>
 ) {
@@ -123,7 +126,7 @@ fun ContractHistoryScreen(
                                     onNavigateToGeneratedContractDetails(contractResult.timeStamp)
                                 }
                                 is ContractResult.ReviewedContractResult -> {
-
+                                    onNavigateToReviewedContractDetails(contractResult.timeStamp)
                                 }
                             }
                         }
@@ -152,7 +155,8 @@ private fun ContractHistoryScreenPreview() {
         ContractHistoryScreen(
             contractHistory = listOf(),
             onNavigateBack = {},
-            onNavigateToGeneratedContractDetails = {}
+            onNavigateToGeneratedContractDetails = {},
+            onNavigateToReviewedContractDetails = {}
         )
     }
 }

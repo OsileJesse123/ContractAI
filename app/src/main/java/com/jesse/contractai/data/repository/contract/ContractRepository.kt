@@ -1,6 +1,7 @@
 package com.jesse.contractai.data.repository.contract
 
 import com.jesse.contractai.ui.model.GeneratedContract
+import com.jesse.contractai.ui.model.ReviewedContract
 import kotlinx.coroutines.flow.Flow
 
 interface ContractRepository {
@@ -13,5 +14,11 @@ interface ContractRepository {
 
     fun getAllGeneratedContracts(): Flow<List<GeneratedContract>>
 
+    fun getAllReviewedContracts(): Flow<List<ReviewedContract>>
+
+    suspend fun getReviewContract(timeStamp: Long): Result<ReviewedContract>
+
     suspend fun regenerateAnotherContract(complaints: String, generatedContract: GeneratedContract): Result<GeneratedContract>
+
+    suspend fun reviewContract(contractContent: String): Result<ReviewedContract>
 }

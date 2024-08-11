@@ -90,6 +90,7 @@ fun HomeRoute(
     onNavigateToLoginScreen: () -> Unit,
     updateBottomBarState: (Boolean) -> Unit,
     onNavigateToGeneratedContractDetails: (Long) -> Unit,
+    onNavigateToReviewedContractDetails: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val contractHistoryItems by viewModel.contractHistoryItems.collectAsStateWithLifecycle()
@@ -109,7 +110,8 @@ fun HomeRoute(
             onNavigateToLoginScreen()
         },
         updateBottomBarState = updateBottomBarState,
-        onNavigateToGeneratedContractDetails = onNavigateToGeneratedContractDetails
+        onNavigateToGeneratedContractDetails = onNavigateToGeneratedContractDetails,
+        onNavigateToReviewedContractDetails = onNavigateToReviewedContractDetails
     )
 }
 
@@ -119,6 +121,7 @@ fun HomeScreen(
     contractHistoryItems: List<ContractResult>,
     onNavigateToContractHistory: () -> Unit,
     onNavigateToGeneratedContractDetails: (Long) -> Unit,
+    onNavigateToReviewedContractDetails: (Long) -> Unit,
     updateBottomBarState: (Boolean) -> Unit,
     onSignOut: () -> Unit,
     userDetails: Pair<String, String>
@@ -292,7 +295,7 @@ fun HomeScreen(
                                 onNavigateToGeneratedContractDetails(contractResult.timeStamp)
                             }
                             is ContractResult.ReviewedContractResult -> {
-
+                                onNavigateToReviewedContractDetails(contractResult.timeStamp)
                             }
                         }
                     }
@@ -578,7 +581,8 @@ fun HomeScreenPreview() {
             updateBottomBarState = {},
             userDetails = Pair("Iriekefe", "iriekefe@gmail.com"),
             contractHistoryItems = listOf(),
-            onNavigateToGeneratedContractDetails = {}
+            onNavigateToGeneratedContractDetails = {},
+            onNavigateToReviewedContractDetails = {}
         )
     }
 }

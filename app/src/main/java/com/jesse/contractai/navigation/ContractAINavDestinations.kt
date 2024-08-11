@@ -62,6 +62,14 @@ object ReviewContractDestination: Destinations {
         get() = R.string.file_search_icon
 }
 
+object ConversationDestination: Destinations{
+    override val route: String
+        get() = "/conversation"
+    val reviewedContractTimeStampArg = "time_stamp"
+    val routeWithArgs = "${ConversationDestination.route}/{$reviewedContractTimeStampArg}"
+    val arguments = listOf(navArgument(reviewedContractTimeStampArg){type = NavType.LongType})
+}
+
 object ContractHistoryDestination: Destinations {
     override val route: String
         get() = "/contract_history"

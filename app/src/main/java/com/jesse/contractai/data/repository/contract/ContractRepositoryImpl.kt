@@ -6,12 +6,15 @@ import com.google.gson.reflect.TypeToken
 import com.jesse.contractai.data.exceptions.AuthenticationException
 import com.jesse.contractai.data.exceptions.NoResponseException
 import com.jesse.contractai.data.local.data_source.ContractLocalDataSource
+import com.jesse.contractai.data.local.database.model.ConversationItemEntity
 import com.jesse.contractai.data.network.data_source.ContractNetworkDataSource
 import com.jesse.contractai.data.network.model.GenerateContractResponse
+import com.jesse.contractai.data.network.model.ReviewContractResponse
 import com.jesse.contractai.data.network.service.user_auth_service.UserAuthenticationService
 import com.jesse.contractai.di.ContractAIDispatchers
 import com.jesse.contractai.di.Dispatcher
 import com.jesse.contractai.ui.model.GeneratedContract
+import com.jesse.contractai.ui.model.ReviewedContract
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
@@ -91,6 +94,30 @@ class ContractRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getAllReviewedContracts(): Flow<List<ReviewedContract>> {
+        return userAuthenticationService.user.flatMapLatest {
+                user ->
+            contractLocalDataSource.getAllReviewedContracts(user?.id ?: "").map {
+                    reviewedContractEntities ->
+                reviewedContractEntities.map {
+                    it.toReviewedContract()
+                }
+            }.flowOn(defaultDispatcher)
+        }
+    }
+
+    override suspend fun getReviewContract(timeStamp: Long): Result<ReviewedContract> {
+        return withContext(ioDispatcher){
+            try {
+                Log.e("ReviewContract", "I get called, timeStamp: $timeStamp")
+                Result.success(contractLocalDataSource.getReviewedContract(timeStamp).toReviewedContract())
+            } catch (e: Exception){
+                Log.e("ReviewContract", "I get called, failed")
+                Result.failure(e)
+            }
+        }
+    }
+
     override suspend fun regenerateAnotherContract(
         complaints: String,
         generatedContract: GeneratedContract
@@ -115,6 +142,43 @@ class ContractRepositoryImpl @Inject constructor(
                 } ?: Result.failure(NoResponseException())
             } catch (e: Exception){
                 Log.e("Error", "Generate contract error: $e")
+                Result.failure(e)
+            }
+        }
+    }
+
+    override suspend fun reviewContract(contractContent: String): Result<ReviewedContract> {
+        return withContext(ioDispatcher){
+            try {
+                // Collect the latest user ID
+                val user = userAuthenticationService.user.firstOrNull() ?: return@withContext Result.failure(AuthenticationException.NoUserException())
+
+                contractNetworkDataSource.reviewContract(contractContent)?.let {
+                        text ->
+                    Log.e("ReviewSuccess", "Review Success: $text")
+                    // Review the contract
+                    val reviewContractResponse = Gson().fromJson(text, ReviewContractResponse::class.java)
+                    val timeStamp = System.currentTimeMillis()
+                    // Insert the reviewed contract into local storage
+                    contractLocalDataSource.insertReviewedContract(reviewContractResponse.toReviewedContractEntity(timeStamp, userId = user.id))
+                    // Insert the content of the reviewed contract as a review conversation item
+                    contractLocalDataSource.insertConversationItem(
+                        ConversationItemEntity(
+                            timeStamp = timeStamp,
+                            reviewedContractTimeStamp = timeStamp,
+                            senderType = 1,
+                            content = reviewContractResponse.content,
+                            conversationMessageStatus = 2
+                        )
+                    )
+                    // Get reviewed contract from local storage (making local storage the source of truth) and then return
+                    // it wrapped in a Result class
+                    val reviewedContract = contractLocalDataSource.getReviewedContract(timeStamp).toReviewedContract()
+                    Log.e("ReviewedContract", "Contract Reviewed: $reviewedContract")
+                    Result.success(reviewedContract)
+                } ?: Result.failure(NoResponseException())
+            } catch (e: Exception){
+                Log.e("Error", "Review contract error: $e")
                 Result.failure(e)
             }
         }

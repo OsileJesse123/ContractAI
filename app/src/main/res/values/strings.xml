@@ -119,4 +119,14 @@
     <string name="re_generating_contract">Your contract is being modified</string>
     <string name="specify_your_contract_type_here">Specify your contract type here</string>
     <string name="no_contract_history">No Contract History</string>
+    <string name="file_seems_to_be_empty">File seems to be empty</string>
+    <string name="failed_to_review_contract">Failed to review contract</string>
+    <string name="your_contract_is_being_reviewed">Your contract is being reviewed</string>
+    <string name="message">Message</string>
+    <string name="message_sent_icon">message sent icon</string>
+    <string name="error_icon">error icon</string>
+    <string name="send_failed">"Send failed, "</string>
+    <string name="retry">Retry</string>
+    <string name="no_messages">No messages</string>
+    <string name="double_down_arrow">double down arrow icon</string>
 </resources>

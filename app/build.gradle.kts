@@ -92,7 +92,7 @@ dependencies {
 
     // Firebase Auth
     implementation("com.google.firebase:firebase-auth")
-
+    
     // Hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
@@ -128,6 +128,10 @@ dependencies {
 
     // Sqlcipher
     implementation("net.zetetic:android-database-sqlcipher:4.5.0")
+
+    // iText for extract text from pdf
+    implementation("com.itextpdf:itext7-core:7.1.14")
+
 
 
     testImplementation("junit:junit:4.13.2")
