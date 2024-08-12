@@ -120,7 +120,7 @@ fun QuestionsScreen(
                     Text(
                         text = stringResource(id = R.string.generating_contract),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            fontSize = 14.sp,
+                            fontSize = 16.sp,
                             color = MaterialTheme.colorScheme.tertiary
                         )
                     )

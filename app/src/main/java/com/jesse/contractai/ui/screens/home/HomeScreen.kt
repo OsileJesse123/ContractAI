@@ -1,5 +1,6 @@
 package com.jesse.contractai.ui.screens.home
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
@@ -18,6 +19,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -90,6 +92,7 @@ fun HomeRoute(
     onNavigateToLoginScreen: () -> Unit,
     updateBottomBarState: (Boolean) -> Unit,
     onNavigateToGeneratedContractDetails: (Long) -> Unit,
+    onNavigateToReviewedContractDetails: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val contractHistoryItems by viewModel.contractHistoryItems.collectAsStateWithLifecycle()
@@ -109,7 +112,8 @@ fun HomeRoute(
             onNavigateToLoginScreen()
         },
         updateBottomBarState = updateBottomBarState,
-        onNavigateToGeneratedContractDetails = onNavigateToGeneratedContractDetails
+        onNavigateToGeneratedContractDetails = onNavigateToGeneratedContractDetails,
+        onNavigateToReviewedContractDetails = onNavigateToReviewedContractDetails
     )
 }
 
@@ -119,6 +123,7 @@ fun HomeScreen(
     contractHistoryItems: List<ContractResult>,
     onNavigateToContractHistory: () -> Unit,
     onNavigateToGeneratedContractDetails: (Long) -> Unit,
+    onNavigateToReviewedContractDetails: (Long) -> Unit,
     updateBottomBarState: (Boolean) -> Unit,
     onSignOut: () -> Unit,
     userDetails: Pair<String, String>
@@ -173,11 +178,12 @@ fun HomeScreen(
 
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .align(Alignment.End),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ){
-            Icon(
+            /*Icon(
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(40.dp)
@@ -191,8 +197,8 @@ fun HomeScreen(
                     id = R.drawable.ic_contract_ai_burger
                 ),
 
-                contentDescription = stringResource(id = R.string.double_back_arrow)
-            )
+                contentDescription = stringResource(id = R.string.contract_ai_burger_icon)
+            )*/
             Image(
                 modifier = Modifier
                     .size(40.dp)
@@ -211,46 +217,71 @@ fun HomeScreen(
             )
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            // ContractHintCard 1
-            ContractHintCard(
-                gradientStartColor = Blue600,
-                gradientEndColor = Green100,
-                hexagonBackgroundColor = MaterialTheme.colorScheme.primary,
-                hint = R.string.review_any_kind_of_contract,
-                description = R.string.review_contract_hint,
-                cardTitle = R.string.review_contract,
-                clicked = hintCardClicked1,
-                hexagonIcon = R.drawable.ic_file_search,
-                onClicked = {
-                    coroutineScope.launch {
-                        hintCardClicked1 = true
-                        delay(5_000)
-                        hintCardClicked1 = false
+        BoxWithConstraints {
+            Log.e("MaxWidth", "Width: ${this.maxWidth}")
+            val cardWidth = when{
+                this.maxWidth <= 390.dp -> 150
+                this.maxWidth <= 450.dp -> 185
+                else -> 220
+            }
+            val cardIconSize = when{
+                this.maxWidth <= 390.dp -> 15
+                this.maxWidth <= 450.dp -> 17
+                else -> 25
+            }
+            val fontSize = when{
+                this.maxWidth <= 350.dp -> 14
+                this.maxWidth <= 460.dp -> 16
+                else -> 18
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+
+                // ContractHintCard 1
+                ContractHintCard(
+                    gradientStartColor = Blue600,
+                    gradientEndColor = Green100,
+                    hexagonBackgroundColor = MaterialTheme.colorScheme.primary,
+                    hint = R.string.review_any_kind_of_contract,
+                    description = R.string.review_contract_hint,
+                    cardTitle = R.string.review_contract,
+                    clicked = hintCardClicked1,
+                    hexagonIcon = R.drawable.ic_file_search,
+                    width = cardWidth,
+                    fontSize = fontSize,
+                    cardIconSize = cardIconSize,
+                    onClicked = {
+                        coroutineScope.launch {
+                            hintCardClicked1 = true
+                            delay(5_000)
+                            hintCardClicked1 = false
+                        }
                     }
-                }
-            )
-            // ContractHintCard 2
-            ContractHintCard(
-                gradientStartColor = Green100,
-                gradientEndColor = Orange200,
-                hexagonBackgroundColor = Green600,
-                hint = R.string.draft_any_kind_of_contract,
-                description = R.string.draft_contract_hint,
-                cardTitle = R.string.draft_contract,
-                clicked = hintCardClicked2,
-                hexagonIcon = R.drawable.ic_add_file,
-                onClicked = {
-                    coroutineScope.launch {
-                        hintCardClicked2 = true
-                        delay(5_000)
-                        hintCardClicked2 = false
+                )
+                // ContractHintCard 2
+                ContractHintCard(
+                    gradientStartColor = Green100,
+                    gradientEndColor = Orange200,
+                    hexagonBackgroundColor = Green600,
+                    hint = R.string.draft_any_kind_of_contract,
+                    description = R.string.draft_contract_hint,
+                    cardTitle = R.string.draft_contract,
+                    clicked = hintCardClicked2,
+                    hexagonIcon = R.drawable.ic_add_file,
+                    width = cardWidth,
+                    cardIconSize = cardIconSize,
+                    fontSize = fontSize,
+                    onClicked = {
+                        coroutineScope.launch {
+                            hintCardClicked2 = true
+                            delay(5_000)
+                            hintCardClicked2 = false
+                        }
                     }
-                }
-            )
+                )
+            }
         }
 
         Row(
@@ -292,7 +323,7 @@ fun HomeScreen(
                                 onNavigateToGeneratedContractDetails(contractResult.timeStamp)
                             }
                             is ContractResult.ReviewedContractResult -> {
-
+                                onNavigateToReviewedContractDetails(contractResult.timeStamp)
                             }
                         }
                     }
@@ -380,7 +411,7 @@ fun LogoutDialog(
                         painter = painterResource(id = R.drawable.ai_welcome_img),
                         contentDescription = stringResource(id = R.string.ai_welcome_image)
                     )
-                    Icon(
+                    /*Icon(
                         modifier = Modifier
                             .clip(CircleShape)
                             .align(Alignment.BottomEnd)
@@ -390,7 +421,7 @@ fun LogoutDialog(
                         painter = painterResource(id = R.drawable.ic_edit),
                         contentDescription = stringResource(id = R.string.edit_icon),
                         tint = MaterialTheme.colorScheme.secondary
-                    )
+                    )*/
                 }
                 Spacer(modifier = Modifier.height(height = 10.dp))
                 Text(
@@ -441,7 +472,10 @@ fun ContractHintCard(
     @StringRes
     description: Int,
     @DrawableRes
-    hexagonIcon: Int
+    hexagonIcon: Int,
+    width: Int,
+    fontSize: Int = 14,
+    cardIconSize: Int
 ) {
     val gradient = Brush.horizontalGradient(
         colors = listOf(gradientStartColor, gradientEndColor),
@@ -455,8 +489,8 @@ fun ContractHintCard(
 
     Card(
         modifier = modifier
-            .width(150.dp)
-            .height(160.dp)
+            .width(width.dp)
+            .height((width + 10).dp)
             .clickable {
                 onClicked()
             },
@@ -468,11 +502,13 @@ fun ContractHintCard(
         Column(modifier = Modifier) {
             // Box 1
             Box(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f),
                 contentAlignment = Alignment.Center
             ){
                 Image(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .drawWithContent {
                             drawContent()
                             drawRect(gradient, blendMode = BlendMode.Modulate)
@@ -491,7 +527,7 @@ fun ContractHintCard(
                         modifier = Modifier,
                         text = stringResource(id = cardTitle),
                         style = MaterialTheme.typography.titleMedium.copy(
-                            fontSize = 12.sp
+                            fontSize = (fontSize - 2).sp
                         )
                     )
                 }
@@ -504,7 +540,7 @@ fun ContractHintCard(
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
-                            .size(30.dp)
+                            .size((cardIconSize * 2).dp)
                             .layout { measurable, constraints ->
                                 val placeable = measurable.measure(constraints)
                                 layout(placeable.width, placeable.height) {
@@ -528,7 +564,7 @@ fun ContractHintCard(
                             )
                     ){
                         Image(
-                            modifier = Modifier.size(13.dp),
+                            modifier = Modifier.size(cardIconSize.dp),
                             painter = painterResource(id = hexagonIcon),
                             contentDescription = "",
                             colorFilter = ColorFilter.tint(color = Color.White)
@@ -558,7 +594,7 @@ fun ContractHintCard(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(id = targetState),
                         style = MaterialTheme.typography.titleMedium.copy(
-                            fontSize = if (clicked) 10.sp else 13.sp
+                            fontSize = if (clicked) (fontSize - 4).sp else fontSize.sp
                         ),
                         textAlign = TextAlign.Center
                     )
@@ -568,7 +604,11 @@ fun ContractHintCard(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    name = "Pixel 7 Pro",
+    device = "spec:shape=Normal,width=460,height=891,dpi=420,unit=dp"
+)
 @Composable
 fun HomeScreenPreview() {
     ContractAITheme {
@@ -578,7 +618,8 @@ fun HomeScreenPreview() {
             updateBottomBarState = {},
             userDetails = Pair("Iriekefe", "iriekefe@gmail.com"),
             contractHistoryItems = listOf(),
-            onNavigateToGeneratedContractDetails = {}
+            onNavigateToGeneratedContractDetails = {},
+            onNavigateToReviewedContractDetails = {}
         )
     }
 }

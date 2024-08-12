@@ -35,6 +35,14 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideRecipeDao(contractAIDatabase: ContractAIDatabase) = contractAIDatabase.generatedContractDao()
+    fun provideGeneratedContractDao(contractAIDatabase: ContractAIDatabase) = contractAIDatabase.generatedContractDao()
+
+    @Provides
+    @Singleton
+    fun provideReviewedContractDao(contractAIDatabase: ContractAIDatabase) = contractAIDatabase.reviewedContractDao()
+
+    @Provides
+    @Singleton
+    fun provideReviewConversationItemDao(contractAIDatabase: ContractAIDatabase) = contractAIDatabase.conversationItemDao()
 
 }

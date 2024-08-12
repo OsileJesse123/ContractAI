@@ -72,4 +72,26 @@ object PromptUtil {
         "Provide the content in formatted HTML to ensure the contract is properly formatted.\n" +
         "Respond in JSON format, including both the title and content of the corrected contract.\n"
     }
+
+    fun reviewContract(contractContent: String): String{
+        return "You are a lawyer specializing in Contract Drafting and are well-versed in Contract Review and Fine Prints and Bypass\n" +
+                "\n" +
+                "Here is the contract you are working with today\n" +
+                "$contractContent\n" +
+                "\n" +
+                "Your task is to understand the contract, then speak to the client and answer all questions and concerns. Ensure that you explain to the user like a child\n" +
+                "\n" +
+                "Steps to Answer the Issues:\n" +
+                "\n" +
+                "Go through the contract\n" +
+                "Go through the lines and the fineprints\n" +
+                "Answer the user to the best of your ability\n" +
+                "\n" +
+                "Firstly , Review this contract for me and tell me what you think about it.   \n" +
+                "Tell me what you think about the contract\n" +
+                "Tell me what you understand about it\n" +
+                "Tell me fine prints I might not see" +
+                "" +
+                "Ensure to give your response a title starting with review and then the content"
+    }
 }

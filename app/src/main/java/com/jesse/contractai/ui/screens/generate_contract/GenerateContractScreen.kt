@@ -7,8 +7,11 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -164,11 +167,13 @@ fun GenerateContractScreen(
                 bottomBar = {
                     AnimatedVisibility(
                         visible = showPromptAIBox,
-                        enter = slideInVertically(
-                            initialOffsetY = {-it}
+                        enter = slideInHorizontally(
+                            animationSpec = tween(durationMillis = 300, easing = LinearEasing),
+                            initialOffsetX = {-it}
                         ),
-                        exit = slideOutVertically(
-                            targetOffsetY = {-it}
+                        exit = slideOutHorizontally(
+                            animationSpec = tween(durationMillis = 300, easing = LinearEasing),
+                            targetOffsetX = {-it}
                         )
                     ) {
                         PromptAIBox(
@@ -182,6 +187,9 @@ fun GenerateContractScreen(
                             },
                             onValueChange = {
                                 promptValue = it
+                            },
+                            onClose = {
+                                showPromptAIBox = false
                             }
                         )
                     }
@@ -195,7 +203,8 @@ fun GenerateContractScreen(
                 ){
                     Column(
                         modifier = Modifier
-                            .padding(horizontal = 20.dp, vertical = 30.dp)
+                            .verticalScroll(rememberScrollState())
+                            .padding(start = 20.dp, end = 20.dp, top = 30.dp, bottom = 10.dp)
                             .fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
@@ -208,18 +217,19 @@ fun GenerateContractScreen(
                             ),
                             textAlign = TextAlign.Center
                         )
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = stringResource(id = R.string.review_and_revise_contract),
                             style = MaterialTheme.typography.titleSmall.copy(
-                                fontSize = 14.sp,
+                                fontSize = 16.sp,
                                 color = MaterialTheme.colorScheme.tertiary
-                            )
+                            ),
+                            textAlign = TextAlign.Center
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                         Column(
                             modifier = Modifier
-                                .weight(2.5f)
+                                .height(550.dp)
                                 .background(
                                     color = MaterialTheme.colorScheme.tertiary.copy(
                                         alpha = .1f
@@ -233,7 +243,7 @@ fun GenerateContractScreen(
                             Column(
                                 modifier = Modifier
                                     .verticalScroll(rememberScrollState())
-                                    .weight(2f)
+                                    .weight(3f)
                             ) {
                                 AndroidView(
                                     modifier = Modifier.fillMaxSize(),
@@ -251,12 +261,11 @@ fun GenerateContractScreen(
                             }
                             Column(
                                 modifier = Modifier
-                                    .weight(.5f)
                                     .padding(horizontal = horizontalPadding, vertical = 10.dp),
                                 verticalArrangement = Arrangement.spacedBy(5.dp)
                             ) {
                                 Spacer(modifier = Modifier.height(height = 10.dp))
-                                Box(
+                                Spacer(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .dashedBorder(
@@ -265,15 +274,16 @@ fun GenerateContractScreen(
                                             dashWidth = 2.dp,
                                             gapWidth = 6.dp
                                         )
-                                ){}
+                                )
                                 Row(
-                                    horizontalArrangement = Arrangement.spacedBy(1.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
+                                    val iconSize = 33.dp
                                     IconButton(
                                         onClick = onNavigateHome
                                     ) {
                                         Icon(
-                                            modifier = Modifier.size(25.dp),
+                                            modifier = Modifier.size(iconSize),
                                             painter = painterResource(id = R.drawable.ic_home),
                                             contentDescription = stringResource(id = R.string.home_icon),
                                             tint = MaterialTheme.colorScheme.error
@@ -285,7 +295,7 @@ fun GenerateContractScreen(
                                         }
                                     ) {
                                         Icon(
-                                            modifier = Modifier.size(25.dp),
+                                            modifier = Modifier.size(iconSize),
                                             painter = painterResource(id = R.drawable.ic_bot),
                                             contentDescription = stringResource(id = R.string.bot_icon),
                                             tint = MaterialTheme.colorScheme.primary
@@ -297,7 +307,7 @@ fun GenerateContractScreen(
                                         }
                                     ) {
                                         Icon(
-                                            modifier = Modifier.size(23.dp),
+                                            modifier = Modifier.size(iconSize),
                                             painter = painterResource(id = R.drawable.ic_download),
                                             contentDescription = stringResource(id = R.string.download_icon),
                                             tint = Green600
@@ -308,10 +318,10 @@ fun GenerateContractScreen(
                         }
                         Spacer(modifier = Modifier.height(20.dp))
                         Text(
-                            modifier = Modifier.weight(.5f),
+                            modifier = Modifier,
                             text = stringResource(id = R.string.contract_ai_disclaimer),
                             style = MaterialTheme.typography.titleSmall.copy(
-                                color = MaterialTheme.colorScheme.tertiary
+                                color = MaterialTheme.colorScheme.tertiary, fontSize = 16.sp
                             ),
                             textAlign = TextAlign.Center
                         )
@@ -344,11 +354,10 @@ fun GenerateContractScreen(
                 Text(
                     text = stringResource(id = R.string.re_generating_contract),
                     style = MaterialTheme.typography.titleSmall.copy(
-                        fontSize = 14.sp,
+                        fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.tertiary
                     )
                 )
-
             }
         }
     }
@@ -467,6 +476,7 @@ fun SatisfactionConfirmedDialog(
 fun PromptAIBox(
     modifier: Modifier = Modifier,
     value: String,
+    onClose: () -> Unit,
     onSend: () -> Unit,
     onValueChange: (String) -> Unit
 ) {
@@ -475,11 +485,22 @@ fun PromptAIBox(
             .fillMaxWidth()
             .background(color = DarkBlue50)
             .padding(
-                vertical = Dimens.screenVerticalPadding,
-                horizontal = Dimens.screenHorizontalPadding
+                bottom = Dimens.screenVerticalPadding,
+                top = 5.dp,
+                start = Dimens.screenHorizontalPadding,
+                end = Dimens.screenHorizontalPadding
             )
-            .height(height = 150.dp)
+            .wrapContentSize()
     ) {
+        IconButton(
+            modifier = Modifier.align(Alignment.End),
+            onClick = onClose
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_cancel),
+                contentDescription = stringResource(id = R.string.cancel_icon)
+            )
+        }
         Text(
             text = stringResource(id = R.string.why_are_you_unsatisfied),
             style = MaterialTheme.typography.titleMedium
@@ -555,7 +576,97 @@ fun GenerateContractScreenPreview() {
                 generatedContract = GeneratedContract(
                     timeStamp = 0,
                     title = "Title",
-                    content = "Content"
+                    content = "<!DOCTYPE html>\n" +
+                            "<html lang=\"en\">\n" +
+                            "<head>\n" +
+                            "    <meta charset=\"UTF-8\">\n" +
+                            "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                            "    <title>Employment Contract</title>\n" +
+                            "    <style>\n" +
+                            "        body {\n" +
+                            "            font-family: Arial, sans-serif;\n" +
+                            "            line-height: 1.6;\n" +
+                            "            margin: 0;\n" +
+                            "            padding: 20px;\n" +
+                            "        }\n" +
+                            "        h1, h2 {\n" +
+                            "            text-align: center;\n" +
+                            "        }\n" +
+                            "        p {\n" +
+                            "            margin: 1em 0;\n" +
+                            "        }\n" +
+                            "        ul {\n" +
+                            "            margin: 0;\n" +
+                            "            padding-left: 20px;\n" +
+                            "        }\n" +
+                            "        .signature {\n" +
+                            "            margin-top: 50px;\n" +
+                            "            display: flex;\n" +
+                            "            justify-content: space-between;\n" +
+                            "        }\n" +
+                            "        .signature div {\n" +
+                            "            width: 45%;\n" +
+                            "            text-align: center;\n" +
+                            "        }\n" +
+                            "    </style>\n" +
+                            "</head>\n" +
+                            "<body>\n" +
+                            "\n" +
+                            "    <h1>Employment Contract</h1>\n" +
+                            "\n" +
+                            "    <p>This Employment Contract (the \"Contract\") is entered into on <strong>[Date]</strong> by and between <strong>[Company Name]</strong>, with a principal place of business at <strong>[Company Address]</strong> (the \"Employer\"), and <strong>[Employee Name]</strong>, residing at <strong>[Employee Address]</strong> (the \"Employee\").</p>\n" +
+                            "\n" +
+                            "    <h2>1. Job Title and Description</h2>\n" +
+                            "    <p>The Employer agrees to employ the Employee as a <strong>Software Engineer</strong> (the \"Position\"). The Employee agrees to diligently and faithfully perform the duties of the Position, which include but are not limited to:</p>\n" +
+                            "    <ul>\n" +
+                            "        <li>Developing and maintaining software applications;</li>\n" +
+                            "        <li>Collaborating with the development team to create new features;</li>\n" +
+                            "        <li>Writing clean, efficient, and well-documented code;</li>\n" +
+                            "        <li>Participating in code reviews and team meetings;</li>\n" +
+                            "        <li>Other duties as may be assigned by the Employer.</li>\n" +
+                            "    </ul>\n" +
+                            "\n" +
+                            "    <h2>2. Compensation</h2>\n" +
+                            "    <p>The Employee will be paid an annual salary of <strong>\$[Base Salary]</strong>, payable bi-weekly or monthly, as determined by the Employer. The Employee may also be eligible for a performance-based bonus of up to <strong>[Percentage or Amount]</strong>, subject to the terms and conditions of the Employer's bonus policy.</p>\n" +
+                            "\n" +
+                            "    <h2>3. Stock Options</h2>\n" +
+                            "    <p>The Employer will grant the Employee <strong>[Number]</strong> stock options, subject to the terms of the Employer's stock option plan. The vesting schedule and other conditions will be outlined in the stock option agreement provided separately.</p>\n" +
+                            "\n" +
+                            "    <h2>4. Benefits</h2>\n" +
+                            "    <p>The Employee will be eligible to participate in the Employer's benefits plans, which include:</p>\n" +
+                            "    <ul>\n" +
+                            "        <li>Health, dental, and vision insurance;</li>\n" +
+                            "        <li>Retirement plan (e.g., 401(k));</li>\n" +
+                            "        <li><strong>[Number]</strong> days of paid vacation per year;</li>\n" +
+                            "        <li><strong>[Number]</strong> days of sick leave per year;</li>\n" +
+                            "        <li><strong>[Number]</strong> paid holidays per year;</li>\n" +
+                            "        <li>Other benefits as described in the Employer's benefits handbook.</li>\n" +
+                            "    </ul>\n" +
+                            "\n" +
+                            "    <h2>5. Termination</h2>\n" +
+                            "    <p>This Contract may be terminated by either party with or without cause, provided that the terminating party gives at least <strong>[Notice Period]</strong> days' written notice to the other party. Upon termination, the Employee will be entitled to receive all earned but unpaid compensation and benefits.</p>\n" +
+                            "\n" +
+                            "    <h2>6. Confidentiality</h2>\n" +
+                            "    <p>The Employee agrees to maintain the confidentiality of all proprietary and confidential information of the Employer. This obligation will survive the termination of this Contract.</p>\n" +
+                            "\n" +
+                            "    <h2>7. Governing Law</h2>\n" +
+                            "    <p>This Contract will be governed by and construed in accordance with the laws of the state of <strong>[State]</strong>, without regard to its conflict of laws principles.</p>\n" +
+                            "\n" +
+                            "    <div class=\"signature\">\n" +
+                            "        <div>\n" +
+                            "            <p>__________________________</p>\n" +
+                            "            <p>Employer's Signature</p>\n" +
+                            "            <p>Date: __________________</p>\n" +
+                            "        </div>\n" +
+                            "        <div>\n" +
+                            "            <p>__________________________</p>\n" +
+                            "            <p>Employee's Signature</p>\n" +
+                            "            <p>Date: __________________</p>\n" +
+                            "        </div>\n" +
+                            "    </div>\n" +
+                            "\n" +
+                            "</body>\n" +
+                            "</html>"
                 )
             ),
             onSendPrompt = {},

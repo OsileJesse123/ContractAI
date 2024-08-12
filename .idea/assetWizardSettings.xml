@@ -307,7 +307,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:$USER_HOME$/Library/Android/sdk/icons/material/materialicons/check/baseline_check_24.xml" />
+                                      <entry key="url" value="file:$USER_HOME$/Library/Android/sdk/icons/material/materialicons/keyboard_double_arrow_down/baseline_keyboard_double_arrow_down_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -317,8 +317,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_sent" />
+                            <entry key="outputName" value="ic_keyboard_double_arrow_down" />
                             <entry key="sourceFile" value="$USER_HOME$/Downloads/sent.svg" />
                           </map>
                         </option>

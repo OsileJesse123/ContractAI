@@ -6,6 +6,7 @@ import com.jesse.contractai.di.Dispatcher
 import com.jesse.contractai.ui.model.ContractResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -21,11 +22,22 @@ class ContractResultsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(): Flow<List<ContractResult>>{
-       return contractRepository.getAllGeneratedContracts().map {
+        return contractRepository.getAllReviewedContracts().combine(contractRepository.getAllGeneratedContracts()){
+            reviewedList, generatedList ->
+            // Convert both lists to ContractResult and combine them
+            val contractResult = (reviewedList.map { reviewed ->
+                ContractResult.ReviewedContractResult(title = reviewed.title, timeStamp = reviewed.timeStamp)
+            } + generatedList.map { generated ->
+                ContractResult.GeneratedContractResult(title = generated.title, timeStamp = generated.timeStamp)
+            }).sortedByDescending { it.timeStamp }
+
+            contractResult
+        }.flowOn(defaultDispatcher)
+       /*return contractRepository.getAllGeneratedContracts().map {
            generatedContracts ->
            generatedContracts.map {
                ContractResult.GeneratedContractResult(title = it.title, timeStamp = it.timeStamp)
            }.sortedByDescending { it.timeStamp }
-       }.flowOn(defaultDispatcher)
+       }.flowOn(defaultDispatcher)*/
     }
 }

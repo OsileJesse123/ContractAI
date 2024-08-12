@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -39,21 +40,34 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.itextpdf.kernel.pdf.PdfDocument
+import com.itextpdf.kernel.pdf.PdfReader
+import com.itextpdf.kernel.pdf.canvas.parser.PdfTextExtractor
 import com.jesse.contractai.R
 import com.jesse.contractai.ui.components.ContractAIBackButton
 import com.jesse.contractai.ui.components.ContractAIButton
+import com.jesse.contractai.ui.components.ContractAICircularProgressIndicator
+import com.jesse.contractai.ui.components.ContractAISnackBar
 import com.jesse.contractai.ui.modifiers.dashedBorder
 import com.jesse.contractai.ui.theme.ContractAITheme
 import com.jesse.contractai.ui.theme.Dimens
 import com.jesse.contractai.ui.theme.Green600
 import com.jesse.contractai.util.FileUtil
+import java.io.File
 
 
 @Composable
 fun ReviewContractRoute(
     modifier: Modifier = Modifier,
+    viewModel: ReviewContractViewModel = hiltViewModel(),
+    onNavigateToNextScreen: (Long) -> Unit,
     onNavigateBack: () -> Unit
 ) {
+
+    val uiState by viewModel.reviewContractUiState.collectAsStateWithLifecycle()
+
     val context = LocalContext.current
     val fileUtil = FileUtil(context)
     var fileDetails by rememberSaveable {
@@ -69,12 +83,18 @@ fun ReviewContractRoute(
             selectedPdfUri = uri
         }
     }
+    LaunchedEffect(uiState.navigateToNextScreen) {
+        if (uiState.navigateToNextScreen){
+            onNavigateToNextScreen(viewModel.reviewedContractTimeStamp)
+            viewModel.onNavigateToNextScreen()
+        }
+    }
     LaunchedEffect(key1 = selectedPdfUri) {
         selectedPdfUri?.let {
             uri ->
             val fileName = fileUtil.getFileName(uri)
             val fileSize = fileUtil.getReadableFileSize(fileUtil.getFileSize(uri))
-            fileDetails = FileDetails(fileName, fileSize)
+            fileDetails = FileDetails(fileName, fileSize, fileUtil.getFileFromUri(uri))
         }
         if (selectedPdfUri == null){
             fileDetails = null
@@ -93,7 +113,15 @@ fun ReviewContractRoute(
         onDelete = {
             selectedPdfUri = null
         },
-        onNavigateBack = onNavigateBack
+        onNavigateBack = onNavigateBack,
+        uiState = uiState,
+        onSnackBarShown = {
+            viewModel.onErrorMessageShown()
+        },
+        onReviewContract = {
+            file ->
+            viewModel.reviewContract(file)
+        }
     )
 }
 
@@ -103,7 +131,10 @@ fun ReviewContractScreen(
     uploadPDF: () -> Unit,
     onDelete: () -> Unit,
     onNavigateBack: () -> Unit,
-    fileDetails: FileDetails?
+    onSnackBarShown: () -> Unit,
+    onReviewContract: (File) -> Unit,
+    fileDetails: FileDetails?,
+    uiState: ReviewContractUiState
 ) {
 
     Box(
@@ -114,59 +145,97 @@ fun ReviewContractScreen(
                 vertical = Dimens.screenVerticalPadding
             )
     ) {
+        ContractAISnackBar(
+            modifier = Modifier,
+            message = uiState.errorMessage,
+            onSnackBarShown = onSnackBarShown
+        )
         ContractAIBackButton(
             modifier = Modifier.align(Alignment.TopStart),
             onClick = onNavigateBack
         )
-        Column(
-            modifier = Modifier.align(Alignment.Center)
+        AnimatedContent(
+            targetState = uiState.isLoading,
+            label = "review contract screen animated content"
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .dashedBorder(
-                        color = MaterialTheme.colorScheme.outlineVariant,
-                        shape = MaterialTheme.shapes.small
+            isLoading ->
+            if(!isLoading){
+                Box(modifier = Modifier.fillMaxSize()){
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .dashedBorder(
+                                    color = MaterialTheme.colorScheme.outlineVariant,
+                                    shape = MaterialTheme.shapes.small
+                                )
+                                .clickable(onClick = uploadPDF),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(5.dp)
+                        ) {
+                            Image(
+                                modifier = Modifier.padding(top = Dimens.marginExtraSmall),
+                                painter = painterResource(id = R.drawable.ic_file_import),
+                                contentDescription = stringResource(id = R.string.import_file_icon)
+                            )
+                            Text(
+                                text = stringResource(id = R.string.upload_files_here),
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                modifier = Modifier.padding(bottom = Dimens.marginExtraSmall),
+                                text = stringResource(id = R.string.pdf_files_only),
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontSize = 12.sp, color = MaterialTheme.colorScheme.error
+                                )
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(height = Dimens.marginSmall))
+                        AnimatedVisibility(visible = fileDetails != null) {
+                            SelectedFileComposable(
+                                fileName = fileDetails?.formatFileName() ?: "",
+                                fileSize = fileDetails?.fileSize ?: "",
+                                onDelete = onDelete
+                            )
+                        }
+                    }
+
+                    ContractAIButton(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        text = stringResource(id = R.string.review_contract),
+                        onClick = {
+                            fileDetails?.file?.let{
+                                file ->
+                                onReviewContract(file)
+                            }
+                        },
+                        icon = R.drawable.ic_file_search,
+                        iconDescription = R.string.file_search_icon,
+                        enabled = fileDetails != null
                     )
-                    .clickable(onClick = uploadPDF),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                Image(
-                    modifier = Modifier.padding(top = Dimens.marginExtraSmall),
-                    painter = painterResource(id = R.drawable.ic_file_import),
-                    contentDescription = stringResource(id = R.string.import_file_icon)
-                )
-                Text(
-                    text = stringResource(id = R.string.upload_files_here),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    modifier = Modifier.padding(bottom = Dimens.marginExtraSmall),
-                    text = stringResource(id = R.string.pdf_files_only),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontSize = 12.sp, color = MaterialTheme.colorScheme.error
+                }
+            } else{
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    ContractAICircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = stringResource(id = R.string.your_contract_is_being_reviewed),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
                     )
-                )
-            }
-            Spacer(modifier = Modifier.height(height = Dimens.marginSmall))
-            AnimatedVisibility(visible = fileDetails != null) {
-                SelectedFileComposable(
-                    fileName = fileDetails?.formatFileName() ?: "",
-                    fileSize = fileDetails?.fileSize ?: "",
-                    onDelete = onDelete
-                )
+                }
             }
         }
-
-        ContractAIButton(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            text = stringResource(id = R.string.review_contract),
-            onClick = { /*TODO*/ },
-            icon = R.drawable.ic_file_search,
-            iconDescription = R.string.file_search_icon,
-            enabled = fileDetails != null
-        )
     }
 }
 
@@ -206,8 +275,7 @@ fun SelectedFileComposable(
                 colorFilter = ColorFilter.tint(color = Green600)
             )
             Spacer(modifier = Modifier.width(width = 5.dp))
-            Column(
-            ) {
+            Column {
                 Text(
                     text = fileName,
                     style = MaterialTheme.typography.titleSmall.copy(
@@ -245,7 +313,10 @@ private fun ReviewContractScreenPreview() {
             uploadPDF = {},
             fileDetails = null,
             onDelete = {},
-            onNavigateBack = {}
+            onNavigateBack = {},
+            uiState = ReviewContractUiState(),
+            onSnackBarShown = {},
+            onReviewContract = {}
         )
     }
 }

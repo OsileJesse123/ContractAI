@@ -13,7 +13,7 @@
     <string name="what_type_of_contract_do_you_need">What type of contract do you need?</string>
     <string name="no_questions">No Questions</string>
     <string name="what_is_the_nature_of_your_contract">What is the nature of your contract?</string>
-    <string name="generating_contract">Your contract is under construction</string>
+    <string name="generating_contract">Your contract is being drafted, seat tight</string>
     <string name="your_contract_is_ready">Your contract is ready!</string>
     <string name="review_contract">Review Contract</string>
     <string name="review_and_revise_contract">Please review and revise where necessary, after you download.</string>
@@ -119,4 +119,15 @@
     <string name="re_generating_contract">Your contract is being modified</string>
     <string name="specify_your_contract_type_here">Specify your contract type here</string>
     <string name="no_contract_history">No Contract History</string>
+    <string name="file_seems_to_be_empty">File seems to be empty</string>
+    <string name="failed_to_review_contract">Failed to review contract</string>
+    <string name="your_contract_is_being_reviewed">Your contract is being reviewed</string>
+    <string name="message">Message</string>
+    <string name="message_sent_icon">message sent icon</string>
+    <string name="error_icon">error icon</string>
+    <string name="send_failed">"Send failed, "</string>
+    <string name="retry">Retry</string>
+    <string name="no_messages">No messages</string>
+    <string name="double_down_arrow">double down arrow icon</string>
+    <string name="contract_ai_burger_icon">contract ai burger/menu icon</string>
 </resources>
