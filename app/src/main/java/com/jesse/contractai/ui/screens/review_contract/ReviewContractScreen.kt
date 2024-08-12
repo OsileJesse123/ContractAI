@@ -229,7 +229,7 @@ fun ReviewContractScreen(
                     Text(
                         text = stringResource(id = R.string.your_contract_is_being_reviewed),
                         style = MaterialTheme.typography.titleSmall.copy(
-                            fontSize = 14.sp,
+                            fontSize = 16.sp,
                             color = MaterialTheme.colorScheme.tertiary
                         )
                     )
