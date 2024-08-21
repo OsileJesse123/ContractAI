@@ -33,11 +33,5 @@ class ContractResultsUseCase @Inject constructor(
 
             contractResult
         }.flowOn(defaultDispatcher)
-       /*return contractRepository.getAllGeneratedContracts().map {
-           generatedContracts ->
-           generatedContracts.map {
-               ContractResult.GeneratedContractResult(title = it.title, timeStamp = it.timeStamp)
-           }.sortedByDescending { it.timeStamp }
-       }.flowOn(defaultDispatcher)*/
     }
 }

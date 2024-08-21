@@ -42,6 +42,7 @@ class UserAuthenticationServiceImpl @Inject constructor(
     }
 
     private fun getUser(): User? {
+        Log.e("User", "User: ${firebaseAuth.currentUser}")
         return firebaseAuth.currentUser?.let {
                 firebaseUser ->
             User(

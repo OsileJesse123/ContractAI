@@ -9,8 +9,6 @@ interface UserAuthenticationRepository {
 
     var rememberPassword: Boolean
 
-    var signInMethod: String?
-
     suspend fun signUpWithEmailAndPassword(firstName: String, lastName: String, email: String, password: String): Result<User>
 
     suspend fun verifyUserEmail(): Result<Unit>

@@ -1,10 +1,9 @@
 package com.jesse.contractai.ui.screens.sign_in
 
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -28,7 +27,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,15 +35,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jesse.contractai.R
-import com.jesse.contractai.ui.animations.SlideDirection
 import com.jesse.contractai.ui.animations.ContractAISlideInAnimation
+import com.jesse.contractai.ui.animations.SlideDirection
 import com.jesse.contractai.ui.components.ContractAIButton
 import com.jesse.contractai.ui.components.ContractAICheckBox
 import com.jesse.contractai.ui.components.ContractAIErrorText
@@ -59,7 +56,6 @@ import com.jesse.contractai.ui.theme.Dimens
 import com.jesse.contractai.util.animationDelayTime
 import com.jesse.contractai.util.animationDelayTimeDifference
 import com.jesse.contractai.util.animationSpec
-import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreenRoute(
@@ -71,10 +67,17 @@ fun SignInScreenRoute(
     onNavigateToSignUp:() -> Unit
 ) {
     val uiState by viewModel.signInUiState.collectAsStateWithLifecycle()
-    val googleSignInLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
-            viewModel.signInWithGoogle(result.data)
+    val beginSignInResult by viewModel.beginSignInResult
+    val googleSignInLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        viewModel.signInWithGoogle(result.data)
+    }
+
+    LaunchedEffect(key1 = beginSignInResult) {
+        beginSignInResult?.let {
+            result ->
+            googleSignInLauncher.launch(IntentSenderRequest.Builder(result.pendingIntent.intentSender).build())
         }
+    }
 
     LaunchedEffect(key1 = uiState.nextDestination) {
         when(uiState.nextDestination){
@@ -94,7 +97,7 @@ fun SignInScreenRoute(
 
     SignInScreen(
         modifier = modifier,
-        onSignInWithGoogle = {googleSignInLauncher.launch(viewModel.getSignInIntent())},
+        onSignInWithGoogle = { viewModel.getBeginSignInResult() },
         onSignIn = {viewModel.signIn()},
         uiState = uiState,
         onNavigateToForgotPassword = onNavigateToForgotPassword,

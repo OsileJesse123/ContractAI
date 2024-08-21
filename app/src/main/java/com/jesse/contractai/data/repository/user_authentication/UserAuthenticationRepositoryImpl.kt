@@ -25,12 +25,6 @@ class UserAuthenticationRepositoryImpl @Inject constructor(
             prefStore.rememberPassword = value
         }
 
-    override var signInMethod: String?
-        get() = prefStore.signInMethod
-        set(value) {
-            prefStore.signInMethod = value
-        }
-
     override fun signOut() {
         userAuthenticationService.signOut()
         prefStore.rememberPassword = false

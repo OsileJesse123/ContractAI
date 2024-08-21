@@ -2,19 +2,14 @@ package com.jesse.contractai.ui.sign_in_handler
 
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
-import androidx.annotation.StringRes
+import android.util.Log
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.tasks.Task
 import com.jesse.contractai.R
-import com.jesse.contractai.data.exceptions.AuthenticationException
-import com.jesse.contractai.data.exceptions.NetworkErrorException
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -22,25 +17,29 @@ class GoogleSignInHandler @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    private val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(context.getString(R.string.default_web_client_id))
-        .requestEmail()
-        .build()
+    private val oneTapClient: SignInClient = Identity.getSignInClient(context)
 
-    private val googleSignInClient = GoogleSignIn.getClient(context, gso)
+    private val signInRequest: BeginSignInRequest = BeginSignInRequest.builder()
+        .setGoogleIdTokenRequestOptions(
+            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                .setSupported(true)
+                .setServerClientId(context.getString(R.string.default_web_client_id))
+                // Only show accounts previously used to sign in.
+                .setFilterByAuthorizedAccounts(false)
+                .build()
+        ).build()
 
-    fun getSignInIntent() = googleSignInClient.signInIntent
-
-    fun signOut(){
-        googleSignInClient.signOut()
+    fun getBeginSignInResult(): Task<BeginSignInResult>{
+        return oneTapClient.beginSignIn(signInRequest)
     }
 
-    fun getIdToken(intent: Intent?): String? {
+    fun getSignInToken(data: Intent?): String? {
         return try {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(intent)
-            val account = task.getResult(ApiException::class.java)
-            return account.idToken
-        } catch (e: ApiException) {
+            val credential = oneTapClient.getSignInCredentialFromIntent(data)
+            // Return sign in token
+            credential.googleIdToken
+        } catch (e: ApiException){
+            Log.e("Google", "Exception: ${e.status}")
             null
         }
     }
