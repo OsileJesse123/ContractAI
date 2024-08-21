@@ -1,13 +1,11 @@
 package com.jesse.contractai.work_manager.initializer
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.startup.AppInitializer
 import androidx.startup.Initializer
 import androidx.work.Configuration
 import androidx.work.WorkManager
-import com.jesse.contractai.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.EntryPoint
@@ -18,7 +16,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object WorkManagerInitializer: Initializer<WorkManager> {
+object ContractAIWorkManagerInitializer: Initializer<WorkManager> {
     @Provides
     @Singleton
     override fun create(context: Context): WorkManager {
@@ -29,7 +27,7 @@ object WorkManagerInitializer: Initializer<WorkManager> {
         val configuration = Configuration
             .Builder()
             .setWorkerFactory(entryPoint.hiltWorkerFactory())
-            .setMinimumLoggingLevel(if (BuildConfig.DEBUG) Log.DEBUG else Log.INFO)
+            //.setMinimumLoggingLevel(if (BuildConfig.DEBUG) Log.DEBUG else Log.INFO)
             .build()
         if(!WorkManager.isInitialized())
             WorkManager.initialize(context, configuration)
@@ -54,6 +52,6 @@ object Sync {
     // Application.onCreate() and should be only done once.
     fun initialize(context: Context) {
         AppInitializer.getInstance(context)
-            .initializeComponent(WorkManagerInitializer::class.java)
+            .initializeComponent(ContractAIWorkManagerInitializer::class.java)
     }
 }

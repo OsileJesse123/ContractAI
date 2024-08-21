@@ -1,6 +1,5 @@
 package com.jesse.contractai.data.repository.contract
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jesse.contractai.data.exceptions.AuthenticationException
@@ -41,7 +40,6 @@ class ContractRepositoryImpl @Inject constructor(
                     Result.success(questions)
                 } ?: Result.failure(NoResponseException())
             } catch (e: Exception){
-                Log.e("Error", "Details on contract error: $e")
                 Result.failure(e)
             }
         }
@@ -68,7 +66,6 @@ class ContractRepositoryImpl @Inject constructor(
                     Result.success(contractLocalDataSource.getGeneratedContract(timeStamp).toGeneratedContract())
                 } ?: Result.failure(NoResponseException())
             } catch (e: Exception){
-                Log.e("Error", "Generate contract error: $e")
                 Result.failure(e)
             }
         }
@@ -109,10 +106,8 @@ class ContractRepositoryImpl @Inject constructor(
     override suspend fun getReviewContract(timeStamp: Long): Result<ReviewedContract> {
         return withContext(ioDispatcher){
             try {
-                Log.e("ReviewContract", "I get called, timeStamp: $timeStamp")
                 Result.success(contractLocalDataSource.getReviewedContract(timeStamp).toReviewedContract())
             } catch (e: Exception){
-                Log.e("ReviewContract", "I get called, failed")
                 Result.failure(e)
             }
         }
@@ -141,7 +136,6 @@ class ContractRepositoryImpl @Inject constructor(
                     Result.success(contractLocalDataSource.getGeneratedContract(timeStamp).toGeneratedContract())
                 } ?: Result.failure(NoResponseException())
             } catch (e: Exception){
-                Log.e("Error", "Generate contract error: $e")
                 Result.failure(e)
             }
         }
@@ -155,7 +149,6 @@ class ContractRepositoryImpl @Inject constructor(
 
                 contractNetworkDataSource.reviewContract(contractContent)?.let {
                         text ->
-                    Log.e("ReviewSuccess", "Review Success: $text")
                     // Review the contract
                     val reviewContractResponse = Gson().fromJson(text, ReviewContractResponse::class.java)
                     val timeStamp = System.currentTimeMillis()
@@ -174,11 +167,9 @@ class ContractRepositoryImpl @Inject constructor(
                     // Get reviewed contract from local storage (making local storage the source of truth) and then return
                     // it wrapped in a Result class
                     val reviewedContract = contractLocalDataSource.getReviewedContract(timeStamp).toReviewedContract()
-                    Log.e("ReviewedContract", "Contract Reviewed: $reviewedContract")
                     Result.success(reviewedContract)
                 } ?: Result.failure(NoResponseException())
             } catch (e: Exception){
-                Log.e("Error", "Review contract error: $e")
                 Result.failure(e)
             }
         }

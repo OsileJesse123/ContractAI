@@ -19,7 +19,6 @@
         <activity
             android:name=".ui.screens.main.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.ContractAI">
             <intent-filter>
@@ -35,6 +34,10 @@
             tools:node="merge">
             <meta-data
                 android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+            <meta-data
+                android:name="com.jesse.contractai.work_manager.initializer.ContractAIWorkManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>

@@ -1,9 +1,11 @@
 package com.jesse.contractai.ui.screens.sign_in
 
 import android.content.Intent
-import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.jesse.contractai.R
 import com.jesse.contractai.data.exceptions.AuthenticationException
 import com.jesse.contractai.data.exceptions.NetworkErrorException
@@ -11,7 +13,6 @@ import com.jesse.contractai.data.repository.user_authentication.UserAuthenticati
 import com.jesse.contractai.domain.use_case.ValidateEmailUseCase
 import com.jesse.contractai.domain.use_case.ValidatePasswordUseCase
 import com.jesse.contractai.ui.sign_in_handler.GoogleSignInHandler
-import com.jesse.contractai.util.SignInMethod
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,20 +25,14 @@ class SignInViewModel @Inject constructor(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val userAuthenticationRepository: UserAuthenticationRepository,
-    private val googleSignInHandler: GoogleSignInHandler
+    private val googleSignInHandler: GoogleSignInHandler,
 ): ViewModel(){
 
     private val _signInUiState: MutableStateFlow<SignInUiState> = MutableStateFlow(SignInUiState())
     val signInUiState get() = _signInUiState.asStateFlow()
 
-    init {
-        viewModelScope.launch {
-            userAuthenticationRepository.user.collect{
-                Log.e("User", "User Sign In: $it")
-            }
-        }
-    }
-    fun getSignInIntent() = googleSignInHandler.getSignInIntent()
+    var beginSignInResult: MutableState<BeginSignInResult?> = mutableStateOf(null)
+        private set
 
     fun validateEmail(email: String){
         // Update TextField value before validation
@@ -88,7 +83,6 @@ class SignInViewModel @Inject constructor(
                             nextDestination = if (user.isEmailVerified) {
                                 userAuthenticationRepository.apply {
                                     rememberPassword = _signInUiState.value.rememberPassword
-                                    signInMethod = SignInMethod.EMAIL_PASSWORD.name
                                 }
                                 NextDestination.HOME
                             } else {
@@ -122,13 +116,31 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    fun getBeginSignInResult(){
+        _signInUiState.update {
+                signInUiState ->
+            signInUiState.copy(isLoading = true)
+        }
+        googleSignInHandler.getBeginSignInResult()
+        .addOnSuccessListener {
+            result ->
+            beginSignInResult.value = result
+        }
+        .addOnFailureListener {
+            _signInUiState.update {
+                    signInUiState ->
+                signInUiState.copy(isLoading = false, errorMessage = R.string.sign_in_failed_with_google_failed)
+            }
+        }
+    }
+
     fun signInWithGoogle(intent: Intent?){
         viewModelScope.launch {
             _signInUiState.update {
                     signInUiState ->
                 signInUiState.copy(isLoading = true)
             }
-            val signInToken = googleSignInHandler.getIdToken(intent)
+            val signInToken = googleSignInHandler.getSignInToken(intent)
             if (signInToken == null){
                 _signInUiState.update {
                         signInUiState ->
@@ -144,7 +156,6 @@ class SignInViewModel @Inject constructor(
                         signInUiState.copy(
                             isLoading = false,
                             nextDestination = if (user.isEmailVerified) {
-                                userAuthenticationRepository.signInMethod = SignInMethod.GOOGLE.name
                                 NextDestination.HOME
                             } else {
                                 NextDestination.VERIFY_EMAIL
@@ -173,6 +184,7 @@ class SignInViewModel @Inject constructor(
                     }
                 }
             }
+            beginSignInResult.value = null
         }
     }
 

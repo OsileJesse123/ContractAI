@@ -13,6 +13,26 @@ android {
     namespace = "com.jesse.contractai"
     compileSdk = 34
 
+    // Load the values from .properties file
+    val keystoreFile = project.rootProject.file("local.properties")
+    val properties = Properties()
+    properties.load(keystoreFile.inputStream())
+
+    val keystorePropertiesFile = rootProject.file("keystore.properties")
+
+    if(keystorePropertiesFile.exists()){
+        properties.load(keystorePropertiesFile.inputStream())
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(properties["storeFile"] as String)
+            storePassword = properties["storePassword"] as String
+            keyAlias = properties["keyAlias"] as String
+            keyPassword = properties["keyPassword"] as String
+        }
+    }
+
     defaultConfig {
         applicationId = "com.jesse.contractai"
         minSdk = 27
@@ -20,10 +40,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        // Load the values from .properties file
-        val keystoreFile = project.rootProject.file("local.properties")
-        val properties = Properties()
-        properties.load(keystoreFile.inputStream())
 
         // Return empty key in case something goes wrong
         val apiKey = properties.getProperty("API_KEY") ?: ""
@@ -42,11 +58,13 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -92,7 +110,7 @@ dependencies {
 
     // Firebase Auth
     implementation("com.google.firebase:firebase-auth")
-    
+
     // Hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
@@ -131,6 +149,9 @@ dependencies {
 
     // iText for extract text from pdf
     implementation("com.itextpdf:itext7-core:7.1.14")
+
+    // Startup runtime
+    implementation ("androidx.startup:startup-runtime:1.1.1")
 
 
 
