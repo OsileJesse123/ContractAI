@@ -140,10 +140,6 @@ fun ReviewContractScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(
-                horizontal = Dimens.screenHorizontalPadding,
-                vertical = Dimens.screenVerticalPadding
-            )
     ) {
         ContractAISnackBar(
             modifier = Modifier,
@@ -151,7 +147,12 @@ fun ReviewContractScreen(
             onSnackBarShown = onSnackBarShown
         )
         ContractAIBackButton(
-            modifier = Modifier.align(Alignment.TopStart),
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(
+                    start = Dimens.screenHorizontalPadding,
+                    top = Dimens.screenVerticalPadding
+                ),
             onClick = onNavigateBack
         )
         AnimatedContent(
@@ -160,11 +161,16 @@ fun ReviewContractScreen(
         ) {
             isLoading ->
             if(!isLoading){
-                Box(modifier = Modifier.fillMaxSize()){
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        horizontal = Dimens.screenHorizontalPadding,
+                        vertical = Dimens.screenVerticalPadding
+                    )
+                ){
                     Column(
                         modifier = Modifier
                             .align(Alignment.Center)
-
                     ) {
                         Column(
                             modifier = Modifier
@@ -220,7 +226,8 @@ fun ReviewContractScreen(
                 }
             } else{
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
