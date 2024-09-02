@@ -1,5 +1,6 @@
 package com.jesse.contractai.data.repository.contract
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.jesse.contractai.data.exceptions.AuthenticationException
@@ -28,7 +29,7 @@ class ContractRepositoryImpl @Inject constructor(
     @Dispatcher(ContractAIDispatchers.DEFAULT) private val defaultDispatcher: CoroutineDispatcher,
     private val contractNetworkDataSource: ContractNetworkDataSource,
     private val contractLocalDataSource: ContractLocalDataSource,
-    private val userAuthenticationService: UserAuthenticationService
+    private val userAuthenticationService: UserAuthenticationService,
 ): ContractRepository {
 
     override suspend fun getMoreDetailsOnContract(contractType: String, contractNature: String): Result<List<String>> {
@@ -53,19 +54,23 @@ class ContractRepositoryImpl @Inject constructor(
             try {
                 // Collect the latest user ID
                 val user = userAuthenticationService.user.firstOrNull() ?: return@withContext Result.failure(AuthenticationException.NoUserException())
+                Log.e("Generate", "Generate, user: $user")
 
                 contractNetworkDataSource.generateContract(contractType, questionsAndAnswers)?.let {
                     text ->
+                    Log.e("Generate", "Generate, text: $text")
                     // Generate the contract
                     val generateContractResponse = Gson().fromJson(text, GenerateContractResponse::class.java)
                     val timeStamp = System.currentTimeMillis()
                     // Insert the generated contract into local storage
                     contractLocalDataSource.insertGeneratedContract(generateContractResponse.toGeneratedContractEntity(timeStamp, userId = user.id))
+                    Log.e("Generate", "Generate, i inserted")
                     // Get generated contract from local storage (making local storage the source of truth) and then return
                     // it wrapped in a Result class
                     Result.success(contractLocalDataSource.getGeneratedContract(timeStamp).toGeneratedContract())
                 } ?: Result.failure(NoResponseException())
             } catch (e: Exception){
+                Log.e("Generate", "Generate failed, error: $e")
                 Result.failure(e)
             }
         }
@@ -170,6 +175,7 @@ class ContractRepositoryImpl @Inject constructor(
                     Result.success(reviewedContract)
                 } ?: Result.failure(NoResponseException())
             } catch (e: Exception){
+                Log.e("Review", "Review failed: $e")
                 Result.failure(e)
             }
         }
