@@ -41,6 +41,7 @@ class ContractRepositoryImpl @Inject constructor(
                     Result.success(questions)
                 } ?: Result.failure(NoResponseException())
             } catch (e: Exception){
+                e.printStackTrace()
                 Result.failure(e)
             }
         }
@@ -154,6 +155,7 @@ class ContractRepositoryImpl @Inject constructor(
 
                 contractNetworkDataSource.reviewContract(contractContent)?.let {
                         text ->
+                    Log.e("Response", "Response: $text")
                     // Review the contract
                     val reviewContractResponse = Gson().fromJson(text, ReviewContractResponse::class.java)
                     val timeStamp = System.currentTimeMillis()

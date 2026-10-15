@@ -1,6 +1,7 @@
 package com.jesse.contractai.ui.screens.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -46,6 +47,7 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.e("changes", "Changes")
         super.onCreate(savedInstanceState)
         setContent {
             ContractAITheme {

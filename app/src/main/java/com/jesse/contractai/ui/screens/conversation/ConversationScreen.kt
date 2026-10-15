@@ -447,7 +447,6 @@ fun ConversationBubble(
                                     append(stringResource(id = R.string.send_failed))
                                 }
                                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)){
-
                                     append(stringResource(id = R.string.retry))
                                 }
                             },
