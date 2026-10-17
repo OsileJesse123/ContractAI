@@ -130,4 +130,6 @@
     <string name="no_messages">No messages</string>
     <string name="double_down_arrow">double down arrow icon</string>
     <string name="contract_ai_burger_icon">contract ai burger/menu icon</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="upcoming_events">Upcoming events</string>
 </resources>

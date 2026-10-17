@@ -1,15 +1,9 @@
 package com.jesse.contractai.util
 
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.jesse.contractai.navigation.HomeDestination
-import kotlin.math.min
 import kotlin.math.sqrt
 
 

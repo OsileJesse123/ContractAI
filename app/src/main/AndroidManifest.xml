@@ -19,7 +19,7 @@
         <activity
             android:name=".ui.screens.main.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustResize|adjustPan"
             android:theme="@style/Theme.ContractAI">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

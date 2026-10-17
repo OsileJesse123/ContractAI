@@ -1,32 +1,28 @@
 package com.jesse.contractai.data.network.data_source
 
+import android.util.Log
 import com.google.ai.client.generativeai.Chat
 import com.google.ai.client.generativeai.type.Content
 import com.google.ai.client.generativeai.type.Schema
-import com.google.ai.client.generativeai.type.generationConfig
-import com.jesse.contractai.data.network.model.GenerateContractResponse
+import com.jesse.contractai.core.config.RemoteConfig
 import com.jesse.contractai.util.GenerativeAIModelUtil
 import com.jesse.contractai.util.PromptUtil
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ContractNetworkDataSourceImpl @Inject constructor(): ContractNetworkDataSource{
+class ContractNetworkDataSourceImpl @Inject constructor(
+    private val remoteConfig: RemoteConfig,
+): ContractNetworkDataSource{
 
     private var chat: Chat? = null
     override suspend fun getMoreContextOnContract(contractType: String, contractNature: String): String? {
         val jsonSchema = Schema.arr("questions", "A list of questions regarding the contract", Schema.str("question", "a question"))
         val generativeModel = GenerativeAIModelUtil
             .getGenerativeModel(
-                GenerativeAIModelUtil.GEMINI_1_5_PRO,
-                generationConfig {
-                    temperature = 0.4f
-                    topK = 32
-                    topP = 1f
-                    maxOutputTokens = 2048
-                    responseMimeType = "application/json"
-                    responseSchema = jsonSchema
-                }
+                aiConfig = remoteConfig.getGenerativeAIConfig(),
+                mimeType = "application/json",
+                schema = jsonSchema
             )
+        Log.e("config", "generative model: $generativeModel")
         val prompt = PromptUtil.generateContractContextQuestions(contractType, contractNature)
         val response = generativeModel.generateContent(prompt)
         return response.text
@@ -45,15 +41,9 @@ class ContractNetworkDataSourceImpl @Inject constructor(): ContractNetworkDataSo
             )
         val generativeModel = GenerativeAIModelUtil
             .getGenerativeModel(
-                GenerativeAIModelUtil.GEMINI_1_5_PRO,
-                generationConfig {
-                    temperature = 0.4f
-                    topK = 32
-                    topP = 1f
-                    maxOutputTokens = 2048
-                    responseMimeType = "application/json"
-                    responseSchema = jsonSchema
-                }
+                aiConfig = remoteConfig.getGenerativeAIConfig(),
+                mimeType = "application/json",
+                schema = jsonSchema
             )
         val prompt = PromptUtil.generateContract(contractType, questionsAndAnswers)
         val response = generativeModel.generateContent(prompt)
@@ -73,15 +63,9 @@ class ContractNetworkDataSourceImpl @Inject constructor(): ContractNetworkDataSo
             )
         val generativeModel = GenerativeAIModelUtil
             .getGenerativeModel(
-                GenerativeAIModelUtil.GEMINI_1_5_PRO,
-                generationConfig {
-                    temperature = 0.4f
-                    topK = 32
-                    topP = 1f
-                    maxOutputTokens = 2048
-                    responseMimeType = "application/json"
-                    responseSchema = jsonSchema
-                }
+                aiConfig = remoteConfig.getGenerativeAIConfig(),
+                mimeType = "application/json",
+                schema = jsonSchema
             )
         val prompt = PromptUtil.regenerateAnotherContract(complaints, contractContent)
         val response = generativeModel.generateContent(prompt)
@@ -98,15 +82,9 @@ class ContractNetworkDataSourceImpl @Inject constructor(): ContractNetworkDataSo
             )
         val generativeModel = GenerativeAIModelUtil
             .getGenerativeModel(
-                GenerativeAIModelUtil.GEMINI_1_5_PRO,
-                generationConfig {
-                    temperature = 0.4f
-                    topK = 32
-                    topP = 1f
-                    maxOutputTokens = 2048
-                    responseMimeType = "application/json"
-                    responseSchema = jsonSchema
-                }
+                aiConfig = remoteConfig.getGenerativeAIConfig(),
+                mimeType = "application/json",
+                schema = jsonSchema
             )
         val prompt = PromptUtil.reviewContract(contractContent)
         val response = generativeModel.generateContent(prompt)
@@ -115,8 +93,9 @@ class ContractNetworkDataSourceImpl @Inject constructor(): ContractNetworkDataSo
 
     override fun initializeChat(history: List<Content>) {
         chat = GenerativeAIModelUtil.getGenerativeModel(
-            modelName = GenerativeAIModelUtil.GEMINI_1_5_PRO,
-            generationConfig = GenerativeAIModelUtil.DEFAULT_GENERATION_CONFIG
+            aiConfig = remoteConfig.getGenerativeAIConfig(),
+            generationConfig = GenerativeAIModelUtil
+                .fromContractAiGenerationConfig(remoteConfig.getGenerationConfig())
         ).startChat(history = history)
     }
 
